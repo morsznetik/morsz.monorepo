@@ -12,14 +12,16 @@
         "prettier-plugin-tailwindcss",
         "@trivago/prettier-plugin-sort-imports"
     ],
+
     "tailwindFunctions": ["clsx", "cn"],
+
     "importOrder": [
-        "^react$", // 1. react exact
-        "^@?\\w", // 2. other packages
-        "^@morsz(/.*|$)", // 3. @morsz scoped packages
-        "^(@|components)(/.*|$)", // 4. internal aliases (example)
-        "^\\.\\./", // 5. parent imports
-        "^\\./" // 6. relative imports
+        "^react$",                // 1. react exact
+        "^@?\\w",                 // 2. other packages
+        "^@morsz(/.*|$)",         // 3. @morsz scoped packages
+        "^(@|components)(/.*|$)", // 4. internal aliases
+        "^\\.\\./",               // 5. parent imports
+        "^\\./"                   // 6. relative imports
     ],
     "importOrderSeparation": true,
     "importOrderSortSpecifiers": true

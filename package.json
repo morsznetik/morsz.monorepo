@@ -5,10 +5,10 @@
         "build": "turbo run build",
         "dev": "turbo run dev",
         "lint": "turbo run lint",
+        "prepare": "husky",
         "format": "prettier --cache --write .",
         "format:check": "prettier --cache -l .",
-        "check-types": "turbo run check-types",
-        "prepare": "husky"
+        "check-types": "turbo run check-types"
     },
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^5.2.2",
