@@ -1,6 +1,7 @@
 {
     "files.exclude": {
-        "bun.lock": true
+        "bun.lock": true,
+        "**/.turbo": true
     },
     "search.exclude": {
         "bun.lock": true,
