@@ -1,24 +1,31 @@
 {
-  "name": "morsz.monorepo",
-  "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
-  },
-  "devDependencies": {
-    "prettier": "^3.6.2",
-    "turbo": "^2.5.5",
-    "typescript": "5.8.3"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "bun@1.2.17",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+    "name": "morsz.monorepo",
+    "private": true,
+    "scripts": {
+        "build": "turbo run build",
+        "dev": "turbo run dev",
+        "lint": "turbo run lint",
+        "format": "prettier --cache --write \"**/*.{js,ts,tsx,md,mdx,json,yaml,css}\"",
+        "format:check": "prettier --cache --check \"**/*.{js,ts,tsx,md,mdx,json,yaml,css}\"",
+        "check-types": "turbo run check-types",
+        "prepare": "husky"
+    },
+    "devDependencies": {
+        "husky": "^9.1.7",
+        "lint-staged": "^16.1.2",
+        "prettier": "^3.6.2",
+        "turbo": "^2.5.5",
+        "typescript": "5.8.3"
+    },
+    "lint-staged": {
+        "**/*.{js,ts,tsx,json,css,md}": "prettier --write"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "packageManager": "bun@1.2.17",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ]
 }
