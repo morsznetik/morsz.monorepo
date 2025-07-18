@@ -5,20 +5,22 @@
         "build": "turbo run build",
         "dev": "turbo run dev",
         "lint": "turbo run lint",
-        "format": "prettier --cache --write \"**/*.{js,ts,tsx,md,mdx,json,yaml,css}\"",
-        "format:check": "prettier --cache --check \"**/*.{js,ts,tsx,md,mdx,json,yaml,css}\"",
+        "format": "prettier --cache --write .",
+        "format:check": "prettier --cache -l .",
         "check-types": "turbo run check-types",
         "prepare": "husky"
     },
     "devDependencies": {
+        "@trivago/prettier-plugin-sort-imports": "^5.2.2",
         "husky": "^9.1.7",
         "lint-staged": "^16.1.2",
         "prettier": "^3.6.2",
+        "prettier-plugin-tailwindcss": "^0.6.14",
         "turbo": "^2.5.5",
         "typescript": "5.8.3"
     },
     "lint-staged": {
-        "**/*.{js,ts,tsx,json,css,md}": "prettier --write"
+        ".": "prettier --cache --write"
     },
     "engines": {
         "node": ">=18"

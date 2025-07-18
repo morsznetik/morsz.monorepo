@@ -1,4 +1,5 @@
 {
+    "$schema": "https://json.schemastore.org/prettierrc",
     "semi": false,
     "singleQuote": false,
     "trailingComma": "es5",
@@ -6,5 +7,20 @@
     "printWidth": 80,
     "tabWidth": 4,
     "bracketSpacing": true,
-    "checkIgnorePragma": true
+    "checkIgnorePragma": true,
+    "plugins": [
+        "prettier-plugin-tailwindcss",
+        "@trivago/prettier-plugin-sort-imports"
+    ],
+    "tailwindFunctions": ["clsx", "cn"],
+    "importOrder": [
+        "^react$", // 1. react exact
+        "^@?\\w", // 2. other packages
+        "^@morsz(/.*|$)", // 3. @morsz scoped packages
+        "^(@|components)(/.*|$)", // 4. internal aliases (example)
+        "^\\.\\./", // 5. parent imports
+        "^\\./" // 6. relative imports
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
 }
