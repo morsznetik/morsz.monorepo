@@ -1,16 +1,16 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "../button"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { ConditionalTooltip } from "@/components/ui/conditional-tooltip"
-import { usePreloadPages } from "@/hooks/use-preload-pages"
-import { cn } from "@/lib/utils"
+} from "../card"
+import { ConditionalTooltip } from "../conditional-tooltip"
+import { usePreloadPages } from "../../hooks/use-preload-pages"
+import { cn } from "../../lib/utils"
 import { ExternalLink } from "lucide-react"
 import { useRouter } from "next/navigation"
 

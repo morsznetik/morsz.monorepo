@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Logo } from "@morsz/ui";
+import { TextShimmerWave } from "@morsz/ui/text-shimmer-wave"
 
 export default function Home() {
   return (
@@ -23,7 +23,9 @@ export default function Home() {
           </li>
           <li className="tracking-[-.01em]">
             Save and see your changes instantly.
-            <Logo />
+            <TextShimmerWave duration={1}>
+              Hello, world!
+            </TextShimmerWave>
           </li>
         </ol>
 
