@@ -1,8 +1,4 @@
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
 import * as React from "react"

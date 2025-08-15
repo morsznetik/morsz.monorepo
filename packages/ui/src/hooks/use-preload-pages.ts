@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
+
+import { useEffect, useRef } from "react"
 
 interface UsePreloadPagesOptions {
     urls?: string[]
@@ -19,7 +20,11 @@ export function preloadPage(
     preloadedRef.current?.add(url)
 }
 
-export const usePreloadPages = ({ urls = [], enabled = true, delay = 0 }: UsePreloadPagesOptions = {}) => {
+export const usePreloadPages = ({
+    urls = [],
+    enabled = true,
+    delay = 0,
+}: UsePreloadPagesOptions = {}) => {
     const preloadedRef = useRef<Set<string>>(new Set())
     const router = useRouter()
 

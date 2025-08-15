@@ -1,9 +1,9 @@
 "use client"
 
-import Logo from "./logo"
-import { Button } from "../button"
 import usePreloadPages from "../../hooks/use-preload-pages"
 import { cn } from "../../lib/utils"
+import { Button } from "../button"
+import Logo from "./logo"
 import { Home, Settings } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 
