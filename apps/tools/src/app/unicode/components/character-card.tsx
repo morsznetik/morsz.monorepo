@@ -2,12 +2,15 @@ import ByteSizeDisplay from "@/app/unicode/components/byte-size-count"
 import CharacterDisplay from "@/app/unicode/components/character-display"
 import CodeBlock from "@/app/unicode/components/codeblock"
 import type { CharacterInfo } from "@/app/unicode/components/types"
-import { getExternalLinksForChar, toUtf16 } from "@/app/unicode/components/utils"
-import CopyButton from "@morsz/ui/special/copy-button"
+import {
+    getExternalLinksForChar,
+    toUtf16,
+} from "@/app/unicode/components/utils"
+import getUnicodeName from "@/helpers/unicode-name"
 import { Badge } from "@morsz/ui/badge"
 import { Button } from "@morsz/ui/button"
 import { Card, CardContent } from "@morsz/ui/card"
-import getUnicodeName from "@/helpers/unicode-name"
+import CopyButton from "@morsz/ui/special/copy-button"
 import { CodeXml, ExternalLink, Info, Tag, Trash2 } from "lucide-react"
 
 import React from "react"

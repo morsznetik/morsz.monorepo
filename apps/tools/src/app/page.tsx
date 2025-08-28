@@ -1,12 +1,14 @@
 import Logo from "@morsz/ui/special/logo"
 import ToolCard, { ToolCardProps } from "@morsz/ui/special/tool-card"
+import { obviously } from "@morsz/ui/styles/fonts"
 import {
     CodeXml,
     Cpu,
     Diff,
     ForkKnife,
     ForkKnifeCrossed,
-    Image as ImageIcon, // jsx-a11y/alt-text gets pissed off if you use the name Image
+    Image as ImageIcon,
+    // jsx-a11y/alt-text gets pissed off if you use the name Image
     KeyRound,
     Languages,
     LetterText,
@@ -219,7 +221,7 @@ const Home = () => {
             <div className="mb-12">
                 <div className="flex mb-4 gap-2">
                     <Logo className="size-12" />
-                    <h1 className="text-3xl font-bold font-header mb-4">
+                    <h1 className={`text-3xl font-bold ${obviously.className}`}>
                         tools<span className="text-brand">.</span>morsz
                         <span className="text-brand">.</span>dev
                     </h1>
@@ -233,7 +235,9 @@ const Home = () => {
 
             {/* Available Tools */}
             <div className="mb-12">
-                <h2 className="text-2xl font-semibold mb-6 font-header">
+                <h2
+                    className={`text-2xl font-semibold mb-6 ${obviously.className}`}
+                >
                     tools
                 </h2>
                 {section(tools)}
@@ -241,14 +245,18 @@ const Home = () => {
 
             {/* Coming Soon Section */}
             <div className="mb-12">
-                <h2 className="text-2xl font-semibold mb-6 font-header">
+                <h2
+                    className={`text-2xl font-semibold mb-6 ${obviously.className}`}
+                >
                     being worked on
                 </h2>
                 {section(upcomingTools, true)}
             </div>
 
             <div className="mb-12">
-                <h2 className="text-2xl font-semibold mb-2 font-header">
+                <h2
+                    className={`text-2xl font-semibold mb-6 ${obviously.className}`}
+                >
                     external tools
                 </h2>
                 <p className="text-muted-foreground mb-4">

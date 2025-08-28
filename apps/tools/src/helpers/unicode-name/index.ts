@@ -4,6 +4,8 @@ import UNICODE_DATA_TYPE from "./type"
 
 // Type definitions for imported data
 export type UnicodeType = typeof UNICODE_DATA_TYPE
+export type UnicodeTypeArray = (number | UnicodeTypeArray)[]
+export type UnicodeTypeNamesArray = readonly string[]
 export type UnicodeName = typeof UNICODE_DATA_NAME
 export type UnicodeSequenceName = typeof UNICODE_DATA_SEQUENCE_NAME
 
@@ -220,24 +222,27 @@ export function unicodeAliases(char: string | number): AliasMap | undefined {
  * @returns Codepoint type
  */
 export function unicodeType(char: string | number): string | undefined {
-    char = codepointToChar(char)
-
+    const normalizedChar = codepointToChar(char)
     if (
-        (typeof char !== "string" && !(typeof char === "object")) ||
-        char === ""
+        (typeof normalizedChar !== "string" &&
+            !(typeof normalizedChar === "object")) ||
+        normalizedChar === ""
     ) {
         return undefined
     }
 
-    let codepoint_depth_offset = char.codePointAt(0)
+    let codepoint_depth_offset = normalizedChar.codePointAt(0)
     if (codepoint_depth_offset === undefined) return undefined
 
-    type UnicodeTypeArray = (number | UnicodeTypeArray)[]
     let index_or_value: UnicodeTypeArray | number = TYPES as UnicodeTypeArray
+
     for (const depth of OFFSETS) {
         if (Array.isArray(index_or_value)) {
-            index_or_value =
-                index_or_value[Math.floor(codepoint_depth_offset / depth)]
+            const nextIndex = Math.floor(codepoint_depth_offset / depth)
+            const nextValue: number | UnicodeTypeArray | undefined =
+                index_or_value[nextIndex]
+            if (nextValue === undefined) return undefined
+            index_or_value = nextValue as number | UnicodeTypeArray
         } else {
             // This case should ideally not be reached if TYPES and OFFSETS are correctly structured
             // but as a fallback, we'll return undefined or handle it as an error.
@@ -246,16 +251,18 @@ export function unicodeType(char: string | number): string | undefined {
         codepoint_depth_offset = codepoint_depth_offset % depth
         if (!Array.isArray(index_or_value)) {
             if (typeof index_or_value === "number") {
-                return TYPE_NAMES[index_or_value]
+                return (TYPE_NAMES as UnicodeTypeNamesArray)[index_or_value]
             } else {
                 return undefined
             }
         }
     }
+
     if (Array.isArray(index_or_value)) {
-        const finalIndex = index_or_value[codepoint_depth_offset]
+        const finalIndex: number | UnicodeTypeArray | undefined =
+            index_or_value[codepoint_depth_offset]
         if (typeof finalIndex === "number") {
-            return TYPE_NAMES[finalIndex]
+            return (TYPE_NAMES as UnicodeTypeNamesArray)[finalIndex]
         } else {
             return undefined
         }
@@ -263,7 +270,6 @@ export function unicodeType(char: string | number): string | undefined {
         return undefined
     }
 }
-
 /**
  * Returns a label of a codepoint in the following format:
  * <type-hex>, e.g. <control-0009> for the tab character or
@@ -348,11 +354,14 @@ export function unicodeSequenceName(char: string): string | undefined {
     } else {
         const fqe = EMOJI_NOT_QUALIFIED[char]
         if (fqe) {
-            return insertWords(
-                SEQUENCES[fqe],
-                SEQUENCES_WORDS,
-                SEQUENCES_REPLACE_BASE
-            )
+            const sequenceValue = SEQUENCES[fqe]
+            if (sequenceValue) {
+                return insertWords(
+                    sequenceValue,
+                    SEQUENCES_WORDS,
+                    SEQUENCES_REPLACE_BASE
+                )
+            }
         }
     }
 

@@ -12,14 +12,14 @@ import {
     isEmojiCharacter,
 } from "@/app/unicode/components/utils"
 import AnimatedWarnings from "@/app/unicode/components/warnings"
+import getUnicodeName from "@/helpers/unicode-name"
 import { Alert, AlertDescription } from "@morsz/ui/alert"
 import { Badge } from "@morsz/ui/badge"
 import { Button } from "@morsz/ui/button"
 import { Card, CardContent } from "@morsz/ui/card"
 import { Input } from "@morsz/ui/input"
-import { Textarea } from "@morsz/ui/textarea"
-import getUnicodeName from "@/helpers/unicode-name"
 import "@morsz/ui/styles/unicode-fonts"
+import { Textarea } from "@morsz/ui/textarea"
 import GraphemeSplitter from "grapheme-splitter"
 import {
     GripVertical,
@@ -101,38 +101,6 @@ const UnicodeInspector = () => {
 
         return options
     }, [customFont, customFontName])
-
-    useEffect(() => {
-        const fontAssets = [
-            { href: "/fonts/GNUUnicode/unifont-16.0.03.otf", type: "font/otf" },
-            { href: "/fonts/ggSans/ggSansRegular.woff", type: "font/woff" },
-            // can't preload this one
-            // { href: "https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap", type: "font/woff2" },
-        ]
-        const injectLinks = () => {
-            fontAssets.forEach(asset => {
-                if (
-                    !document.head.querySelector(
-                        `link[rel='preload'][href='${asset.href}']`
-                    )
-                ) {
-                    const link = document.createElement("link")
-                    link.rel = "preload"
-                    link.as = "font"
-                    link.href = asset.href
-                    link.type = asset.type
-                    link.crossOrigin = "anonymous"
-                    document.head.appendChild(link)
-                }
-            })
-        }
-
-        // some browsers don't support requestIdleCallback, so we use setTimeout instead
-        const idle =
-            window.requestIdleCallback ??
-            ((cb: () => void) => setTimeout(cb, 200))
-        idle(injectLinks)
-    }, [])
 
     useEffect(() => {
         if (!customFont) return
@@ -475,7 +443,7 @@ const UnicodeInspector = () => {
                         Unicode Character Inspector
                         <Sparkles className="w-8 h-8 text-brand-purple dark:text-brand-purple-light" />
                     </h1>
-                    <p className="text-muted-foreground text-sm sm:text-base md:text-lg px-2">
+                    <p className="text-muted-foreground text-lg md:text-base sm:text-sm px-2">
                         Paste text to inspect Unicode characters and their
                         properties
                     </p>
@@ -507,10 +475,8 @@ const UnicodeInspector = () => {
                 <Card className="bg-card/80 rounded-xl shadow-xl border border-border backdrop-blur-sm">
                     <CardContent className="space-y-3 sm:space-y-4">
                         <div className="flex flex-wrap justify-between items-center gap-2">
-                            <span className="text-base sm:text-lg font-medium flex items-center">
-                                <span className="text-brand-blue dark:text-brand-blue-light">
-                                    Input Text
-                                </span>
+                            <span className="text-lg sm:text-base font-medium text-brand-blue dark:text-brand-blue-light">
+                                Input Text
                             </span>
                             {input && (
                                 <div className="flex flex-wrap items-center gap-2">

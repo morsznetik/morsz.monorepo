@@ -1,40 +1,48 @@
 {
-  "name": "morsz.monorepo",
-  "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "prepare": "husky",
-    "format": "prettier --cache --write .",
-    "format:check": "prettier --cache -l .",
-    "check-types": "turbo run check-types"
-  },
-  "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.5",
-    "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.6.14",
-    "turbo": "^2.5.5",
-    "typescript": "5.8.3"
-  },
-  "lint-staged": {
-    ".": "prettier --cache --write"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "bun@1.2.20",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "trustedDependencies": [
-    "@parcel/watcher",
-    "@tailwindcss/oxide"
-  ],
-  "dependencies": {
-    "next": "^15.4.6"
-  }
+    "name": "morsz.monorepo",
+    "private": true,
+    "scripts": {
+        "build": "turbo run build",
+        "dev:build": "turbo run dev:build",
+        "dev": "turbo run dev",
+        "lint": "turbo run lint",
+        "prepare": "husky",
+        "format": "prettier --cache --write .",
+        "format:check": "prettier --cache -l .",
+        "check-types": "turbo run check-types"
+    },
+    "devDependencies": {
+        "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.1.5",
+        "prettier": "^3.6.2",
+        "prettier-plugin-tailwindcss": "^0.6.14",
+        "turbo": "^2.5.6",
+        "typescript": "^5.9.2"
+    },
+    "lint-staged": {
+        ".": "prettier --cache --write"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "packageManager": "bun@1.2.20",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "trustedDependencies": [
+        "@parcel/watcher",
+        "@tailwindcss/oxide"
+    ],
+    "dependencies": {
+        "next": "workspace:*"
+    },
+    "resolutions": {
+        "next": "^15.5.0",
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1",
+        "@types/react": "^19.1.11",
+        "@types/react-dom": "^19.1.7"
+    }
 }

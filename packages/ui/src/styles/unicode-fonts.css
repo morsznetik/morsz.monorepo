@@ -1,21 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
-
-@font-face {
-    font-family: "GNU Unifont";
-    src: url("/fonts/GNUUnicode/unifont-16.0.03.otf") format("opentype");
-    font-display: swap;
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "ggSans";
-    src: url("/fonts/ggSans/ggSansRegular.woff") format("woff");
-    font-display: swap;
-    font-weight: normal;
-    font-style: normal;
-}
-
 .font-system {
     font-family:
         ui-sans-serif,
@@ -29,16 +11,16 @@
 }
 
 .font-gnu-unifont {
-    font-family: "GNU Unifont", monospace;
+    font-family: var(--font-gnu-unifont), monospace;
     text-rendering: optimizeLegibility;
 }
 
 .font-noto-sans {
-    font-family: "Noto Sans", sans-serif;
+    font-family: var(--font-noto-sans), sans-serif;
     text-rendering: optimizeLegibility;
 }
 
 .font-gg-sans {
-    font-family: "ggSans", sans-serif;
+    font-family: var(--font-ggsans), sans-serif;
     text-rendering: optimizeLegibility;
 }

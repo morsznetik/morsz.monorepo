@@ -1,4 +1,5 @@
 import { Separator } from "@morsz/ui/separator"
+import { obviously } from "@morsz/ui/styles/fonts"
 
 const Typography = () => {
     const demoText = "The quick brown fox jumps over the lazy dog."
@@ -39,11 +40,11 @@ const Typography = () => {
         },
         {
             title: "Header Font (Obviously)",
-            extraClasses: "font-header",
+            extraClasses: `${obviously.className}`,
         },
         {
             title: "Header Font - Black & Expanded",
-            extraClasses: "font-header font-black font-stretch-expanded",
+            extraClasses: `font-black font-stretch-expanded ${obviously.className}`,
         },
     ]
 

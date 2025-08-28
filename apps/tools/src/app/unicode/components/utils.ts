@@ -110,18 +110,16 @@ export const getUnicodeCategory = (codePoint: number): string | null => {
 /**
  * Get the Unicode block for a code point
  */
-export const getUnicodeBlock = (codePoint: number): string | null => {
-    try {
-        for (const [blockName, range] of Object.entries(unicodeBlocks)) {
-            const [start, end] = range.split("..").map(hex => parseInt(hex, 16))
-            if (codePoint >= start && codePoint <= end) {
-                return blockName
-            }
+export const getUnicodeBlock = (codePoint: number): string => {
+    for (const [blockName, range] of Object.entries(unicodeBlocks)) {
+        const [startHex = "0", endHex = "0"] = range.split("..")
+        const start = parseInt(startHex, 16)
+        const end = parseInt(endHex, 16)
+        if (codePoint >= start && codePoint <= end) {
+            return blockName
         }
-        return "Unknown Block"
-    } catch {
-        return "Unknown Block"
     }
+    return "Unknown Block"
 }
 
 export const toUtf16 = (codePoint: number): string[] => {
