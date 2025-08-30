@@ -36,7 +36,7 @@ const UICookieBanner = ({
     consentVersion = "demo-0",
     storageKey = "cookie_consent",
     title,
-    message = "This site doesn't use cookies yet, but we added this banner to demo it to you.",
+    message = "This site doesn't use cookies yet, but I added this banner to demo it to you.",
     icon,
     declineLabel = "Decline",
     allowLabel = "Allow",
