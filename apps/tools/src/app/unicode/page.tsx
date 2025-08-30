@@ -33,6 +33,8 @@ import {
     Upload,
     X,
 } from "lucide-react"
+import type { Metadata } from "next"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
@@ -49,6 +51,60 @@ const UnicodeInspector = () => {
     const [customFontName, setCustomFontName] = useState<string>("Custom Font")
     const [customFontError, setCustomFontError] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    // url sync
+    const router = useRouter()
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+
+    // helpers to encode/decode input as hex code points in URL
+    const encodeToHexParam = useCallback((value: string) => {
+        if (!value) return ""
+        try {
+            return Array.from(value)
+                .map(ch => (ch.codePointAt(0) || 0).toString(16).toUpperCase())
+                .join("-")
+        } catch {
+            return ""
+        }
+    }, [])
+
+    const decodeFromHexParam = useCallback((hex: string) => {
+        if (!hex) return ""
+        try {
+            return hex
+                .split("-")
+                .filter(Boolean)
+                .map(h => {
+                    const cp = parseInt(h, 16)
+                    if (Number.isNaN(cp)) return ""
+                    return String.fromCodePoint(cp)
+                })
+                .join("")
+        } catch {
+            return ""
+        }
+    }, [])
+
+    // initialize input from URL once on mount
+    useEffect(() => {
+        try {
+            const initialHex = searchParams.get("hex")
+            if (initialHex) {
+                setInput(decodeFromHexParam(initialHex))
+            }
+        } catch {}
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    // sync input to URL as hex code points without pushing history
+    useEffect(() => {
+        try {
+            const hex = encodeToHexParam(input)
+            const newUrl = hex ? `${pathname}?hex=${hex}` : pathname
+            router.replace(newUrl, { scroll: false })
+        } catch {}
+    }, [input, pathname, router, encodeToHexParam, decodeFromHexParam])
 
     // do we really need to memoize this?
     // maybe, but we shouldnt be changing it too often
@@ -109,19 +165,19 @@ const UnicodeInspector = () => {
     // is this even a hack? im not sure
     useEffect(() => {
         if (!customFont) return
-    
-        const font = new FontFace('CustomFont', `url(${customFont})`)
+
+        const font = new FontFace("CustomFont", `url(${customFont})`)
         document.fonts.add(font)
-    
+
         font.load().then(() => {
-          document.body.classList.add('font-custom')
+            document.body.classList.add("font-custom")
         })
-    
+
         return () => {
-          document.fonts.delete(font)
-          document.body.classList.remove('font-custom')
+            document.fonts.delete(font)
+            document.body.classList.remove("font-custom")
         }
-      }, [customFont])
+    }, [customFont])
 
     // toggle group options for view mode
     const viewModeOptions = [
@@ -665,3 +721,9 @@ const UnicodeInspector = () => {
 }
 
 export default UnicodeInspector
+
+export const metadata: Metadata = {
+    title: "Unicode Inspector",
+    description:
+        "inspect Unicode characters, names, code points, categories, blocks, byte sizes, and more.",
+}

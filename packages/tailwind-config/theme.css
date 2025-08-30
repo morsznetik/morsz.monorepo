@@ -163,7 +163,7 @@
     }
 
     blockquote {
-        @apply text-muted-foreground pl-4 border-l-4 italic;
+        @apply text-muted-foreground border-l-4 pl-4 italic;
     }
 
     code {

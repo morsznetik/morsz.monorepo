@@ -9,7 +9,7 @@ export interface CharacterInfo {
     allCodePoints?: number[]
     allHexCodePoints?: string[]
     isEmoji?: boolean
-    
+
     // legacy/old properties
     script?: string
     bidiClass?: string

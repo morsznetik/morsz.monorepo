@@ -42,5 +42,3 @@ const ResetLocalStorageButton = () => {
 }
 
 export default ResetLocalStorageButton
-
-

@@ -12,6 +12,7 @@ import { Input } from "@morsz/ui/input"
 import { Label } from "@morsz/ui/label"
 import { ToggleGroup, ToggleGroupItem } from "@morsz/ui/toggle-group"
 import { cn } from "@morsz/ui/utils"
+import type { Metadata } from "next"
 
 import { useState } from "react"
 
@@ -73,6 +74,8 @@ const PasswordChecker = () => {
                             id="pw"
                             type="password"
                             autoComplete="off"
+                            data-form-type="other"
+                            data-lpignore="true"
                             value={pw}
                             onChange={e => setPw(e.target.value)}
                             placeholder="Type your password..."
@@ -113,3 +116,8 @@ const PasswordChecker = () => {
 }
 
 export default PasswordChecker
+
+export const metadata: Metadata = {
+    title: "Password Strength Checker",
+    description: "check a password's strength using data from HiveSystems",
+}

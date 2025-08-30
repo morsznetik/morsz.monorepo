@@ -200,10 +200,14 @@ const CharacterCard = ({
                                                 </dt>
                                                 <dd className="text-foreground text-sm md:text-base font-medium break-words sm:col-span-2 min-w-0">
                                                     {charInfo.name ? (
-                                                        charInfo.name.includes("<span") ? (
+                                                        charInfo.name.includes(
+                                                            "<span"
+                                                        ) ? (
                                                             <span
                                                                 className="inline-block w-full break-words"
-                                                                dangerouslySetInnerHTML={{ __html: charInfo.name }}
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: charInfo.name,
+                                                                }}
                                                             />
                                                         ) : (
                                                             <span className="inline-block w-full break-words">

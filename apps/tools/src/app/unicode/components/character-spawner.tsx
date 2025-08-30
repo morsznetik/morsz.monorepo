@@ -100,7 +100,9 @@ const CharacterSpawner = ({ onSpawn, selectedFont }: CharacterSpawnerProps) => {
                         </span>
                         <div className="flex items-center gap-2">
                             <div className="flex items-center h-9 rounded-md border border-border bg-muted/50 text-muted-foreground px-2.5 select-none">
-                                <span className="text-xs font-medium tracking-wider">U+</span>
+                                <span className="text-xs font-medium tracking-wider">
+                                    U+
+                                </span>
                             </div>
                             <Input
                                 type="text"

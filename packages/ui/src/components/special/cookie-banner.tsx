@@ -1,9 +1,10 @@
 "use client"
 
+import { cn } from "../../lib/utils"
 import { Button } from "../button"
 import { Card } from "../card"
-import { cn } from "../../lib/utils"
 import { Cookie, X } from "lucide-react"
+
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 type CookieBannerPosition =
@@ -58,7 +59,11 @@ const UICookieBanner = ({
         try {
             const raw = localStorage.getItem(storageKey)
             if (raw) {
-                const parsed = JSON.parse(raw) as { version?: string; accepted?: boolean; timestamp?: number }
+                const parsed = JSON.parse(raw) as {
+                    version?: string
+                    accepted?: boolean
+                    timestamp?: number
+                }
                 if (parsed && parsed.version === consentVersion) {
                     setDismissed(true)
                 }
@@ -68,7 +73,11 @@ const UICookieBanner = ({
 
     const defaultAllow = useCallback(() => {
         try {
-            const record = { version: consentVersion, accepted: true, timestamp: Date.now() }
+            const record = {
+                version: consentVersion,
+                accepted: true,
+                timestamp: Date.now(),
+            }
             localStorage.setItem(storageKey, JSON.stringify(record))
         } catch {}
         setDismissed(true)
@@ -76,7 +85,11 @@ const UICookieBanner = ({
 
     const defaultDecline = useCallback(() => {
         try {
-            const record = { version: consentVersion, accepted: false, timestamp: Date.now() }
+            const record = {
+                version: consentVersion,
+                accepted: false,
+                timestamp: Date.now(),
+            }
             localStorage.setItem(storageKey, JSON.stringify(record))
         } catch {}
         setDismissed(true)
@@ -89,7 +102,8 @@ const UICookieBanner = ({
 
     if (!mounted || !isVisible) return null
 
-    const mobileBaseClass = "fixed bottom-3 inset-x-0 flex justify-center px-3 z-50 sm:px-0"
+    const mobileBaseClass =
+        "fixed bottom-3 inset-x-0 flex justify-center px-3 z-50 sm:px-0 pointer-events-none"
     let smPositionClass = "sm:bottom-5 sm:right-5 sm:inset-auto"
     switch (position) {
         case "bottom-left":
@@ -113,16 +127,33 @@ const UICookieBanner = ({
 
     return (
         <div className={cn(mobileBaseClass, smPositionClass)}>
-            <Card className={cn("bg-card border border-border max-w-sm w-full rounded-xl shadow-md py-2", className)}>
+            <Card
+                className={cn(
+                    "bg-card border border-border max-w-sm w-full rounded-xl shadow-md py-2 pointer-events-auto",
+                    className
+                )}
+            >
                 <div className="px-3 py-2 sm:px-3 sm:py-2.5">
-                    <div className={cn("flex items-start", "gap-1.5")}> 
+                    <div className={cn("flex items-start", "gap-1.5")}>
                         <div className="mt-0.5 text-muted-foreground">
-                            {icon ?? <Cookie className="w-5 h-5 text-brand-light" />}
+                            {icon ?? (
+                                <Cookie className="w-5 h-5 text-brand-light" />
+                            )}
                         </div>
                         <div className="flex-1 text-foreground">
-                            {title && <p className="text-sm font-medium mb-1">{title}</p>}
+                            {title && (
+                                <p className="text-sm font-medium mb-1">
+                                    {title}
+                                </p>
+                            )}
                             <p className="text-sm">{message}</p>
-                            <div className={cn("mt-2", "flex flex-col sm:flex-row items-stretch sm:items-center", "gap-1.5")}> 
+                            <div
+                                className={cn(
+                                    "mt-2",
+                                    "flex flex-row items-stretch sm:items-center w-full",
+                                    "gap-1.5"
+                                )}
+                            >
                                 {actions ? (
                                     actions
                                 ) : (
@@ -130,14 +161,24 @@ const UICookieBanner = ({
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className={cn("bg-muted hover:bg-muted/80", "rounded-lg px-2.5 h-9 sm:h-8", "w-full sm:w-auto")}
-                                            onClick={onDecline ?? defaultDecline}
+                                            className={cn(
+                                                "bg-muted hover:bg-muted/80",
+                                                "rounded-lg px-2.5 h-9 sm:h-8",
+                                                "flex-1"
+                                            )}
+                                            onClick={
+                                                onDecline ?? defaultDecline
+                                            }
                                         >
                                             {declineLabel}
                                         </Button>
                                         <Button
                                             size="sm"
-                                            className={cn("bg-foreground text-background hover:bg-foreground/90", "rounded-lg px-2.5 h-9 sm:h-8", "w-full sm:w-auto")}
+                                            className={cn(
+                                                "bg-foreground text-background hover:bg-foreground/90",
+                                                "rounded-lg px-2.5 h-9 sm:h-8",
+                                                "flex-1"
+                                            )}
                                             onClick={onAllow ?? defaultAllow}
                                         >
                                             {allowLabel}
@@ -165,5 +206,3 @@ const UICookieBanner = ({
 }
 
 export default UICookieBanner
-
-

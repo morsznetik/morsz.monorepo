@@ -394,7 +394,7 @@ export function getStrength(
             }
             time = formatYears(est)
             estimated = true
-        // if there is one parseable value, use it, no need to estimate
+            // if there is one parseable value, use it, no need to estimate
         } else if (lastTime !== null) {
             time = ">" + formatYears(lastTime)
         } else {
