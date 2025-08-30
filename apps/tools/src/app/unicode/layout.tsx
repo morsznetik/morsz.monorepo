@@ -4,9 +4,9 @@ import type { ReactNode } from "react"
 export async function generateMetadata({
     searchParams,
 }: {
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }): Promise<Metadata> {
-    const hex = searchParams.hex
+    const hex = (await searchParams).hex
     
     if (hex && typeof hex === 'string') {
         const decodedInput = hex
