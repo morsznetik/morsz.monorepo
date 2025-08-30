@@ -721,9 +721,3 @@ const UnicodeInspector = () => {
 }
 
 export default UnicodeInspector
-
-export const metadata: Metadata = {
-    title: "Unicode Inspector",
-    description:
-        "inspect Unicode characters, names, code points, categories, blocks, byte sizes, and more.",
-}

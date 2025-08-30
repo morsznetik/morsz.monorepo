@@ -12,8 +12,6 @@ import { Input } from "@morsz/ui/input"
 import { Label } from "@morsz/ui/label"
 import { ToggleGroup, ToggleGroupItem } from "@morsz/ui/toggle-group"
 import { cn } from "@morsz/ui/utils"
-import type { Metadata } from "next"
-
 import { useState } from "react"
 
 const PasswordChecker = () => {
@@ -116,8 +114,3 @@ const PasswordChecker = () => {
 }
 
 export default PasswordChecker
-
-export const metadata: Metadata = {
-    title: "Password Strength Checker",
-    description: "check a password's strength using data from HiveSystems",
-}
