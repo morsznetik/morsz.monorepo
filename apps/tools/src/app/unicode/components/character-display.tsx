@@ -21,10 +21,13 @@ const CharacterDisplay = ({
     const containerRef = useRef<HTMLDivElement>(null)
     const [scale, setScale] = useState(1)
 
-    // Adjust scale if character overflows container
+    // adjust scale if character overflows container
+    // useLayoutEffect so we run the check after first paint
     useLayoutEffect(() => {
         const char = charRef.current
         const container = containerRef.current
+
+        // return for safety but shouldnt happen
         if (!char || !container) return
 
         const charRect = char.getBoundingClientRect()
@@ -44,7 +47,8 @@ const CharacterDisplay = ({
         }
     }, [char, fontFamily, compactView])
 
-    // Safety check for empty character
+    // this sometimes happens when the full bundle is not loaded (?)
+    // i havent been able to reproduce it yet so idk
     if (!char) return null
 
     return (

@@ -1,6 +1,3 @@
-// --- Types and Constants ---
-import { assert } from "console"
-
 export enum CharsetType {
     Numbers = 0,
     Lowercase = 1,
@@ -275,7 +272,7 @@ export function getCharsetType(pw: string): CharsetType {
 }
 
 export function parseYears(time: string): number | null {
-    // Returns years as a number, or null if not parseable
+    // if its not parseable, return 0, probably should be an error but hey?
     if (/Instant(ly)?/i.test(time)) return 0
 
     const map: { [key: string]: number | string } = {
@@ -288,10 +285,12 @@ export function parseYears(time: string): number | null {
         m: 1_000_000,
         bn: 1_000_000_000,
         tn: 1_000_000_000_000,
+        // need to use strings for large numbers since they're too large for number types
         qd: "1000000000000000",
         qn: "1000000000000000000",
     }
 
+    // regex to parse the time string
     const regex = /([\d,.]+)\s*(hour|day|week|month|year|k|m|bn|tn|qd|qn)s?/i
     const match = time.replace(/,/g, "").match(regex)
 
@@ -301,11 +300,11 @@ export function parseYears(time: string): number | null {
     const unit = match[2].toLowerCase()
 
     if (typeof map[unit] === "string") {
-        // Use BigInt for very large numbers, but return null if not safe
+        // use bigint for very large numbers, but return null if not safe
         try {
             value =
                 BigInt(Math.round(Number(value))) * BigInt(map[unit] as string)
-            // If value is too large, return null
+            // if value is too large, return null
             if (value > BigInt(Number.MAX_SAFE_INTEGER)) return null
             value = Number(value)
         } catch {
@@ -315,7 +314,7 @@ export function parseYears(time: string): number | null {
         value = Number(value) * (map[unit] as number)
     }
 
-    // If unit is like 'k', 'm', etc., multiply by years
+    // if unit is like 'k', 'm', etc., multiply by years
     if (["k", "m", "bn", "tn", "qd", "qn"].includes(unit)) {
         value = Number(value) * Number(map["year"])
     }
@@ -349,21 +348,8 @@ export function getStrength(
     pw: string,
     table: HiveTableEntry[]
 ): StrengthResult {
-    if (!pw) {
-        return { label: "", color: "default", time: "" }
-    }
-
-    // Ensure table has entries
-    if (!table || table.length === 0) {
-        return { label: "Unknown", color: "default", time: "Unknown" }
-    }
-
-    const TABLE_LENGTH = table[0]?.times?.length ?? 0
-    if (TABLE_LENGTH === 0) {
-        return { label: "Unknown", color: "default", time: "Unknown" }
-    }
-
     const charset = getCharsetType(pw)
+    const TABLE_LENGTH = table[0]?.times?.length ?? 0
     let idx = Math.min(pw.length - 1, TABLE_LENGTH - 1)
     if (idx < 0) idx = 0
 
@@ -375,15 +361,15 @@ export function getStrength(
     let time = entry.times[idx] ?? "Unknown"
     let estimated = false
 
-    // If password is longer than table, estimate exponentially
+    // if password is longer than table, estimate exponentially
     if (pw.length > TABLE_LENGTH) {
-        // Find the last two parseable numeric entries in the table
+        // find the last two parseable numeric entries in the table
         let lastIdx = TABLE_LENGTH - 1
         let prevIdx = TABLE_LENGTH - 2
         let lastTime: number | null = null
         let prevTime: number | null = null
 
-        // Search backwards for last two parseable values
+        // search backwards for last two parseable values
         for (let i = TABLE_LENGTH - 1; i >= 0; --i) {
             const timeEntry = entry.times[i]
             if (timeEntry) {
@@ -401,6 +387,7 @@ export function getStrength(
             }
         }
 
+        // if there are two parseable values, estimate exponentially
         if (lastTime !== null && prevTime !== null && lastTime > prevTime) {
             const growth = lastTime / prevTime
             let est = lastTime
@@ -409,15 +396,17 @@ export function getStrength(
             }
             time = formatYears(est)
             estimated = true
+        // if there is one parseable value, use it, no need to estimate
         } else if (lastTime !== null) {
             time = ">" + formatYears(lastTime)
         } else {
+            // if not, use the last entry in the table
             const lastEntry = entry.times[TABLE_LENGTH - 1]
             time = ">" + (lastEntry ?? "Unknown")
         }
     }
 
-    // Color mapping
+    // mapping for color and label
     let color: StrengthResult["color"] = "default"
     let label = "Weak"
     const cleanTime =

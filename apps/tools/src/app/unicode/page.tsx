@@ -37,6 +37,7 @@ import {
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 const UnicodeInspector = () => {
+    // useState ftw (i dont wanna learn zustand yet)
     const [input, setInput] = useState<string>("")
     const [characters, setCharacters] = useState<CharacterInfo[]>([])
     const [groupMode, setGroupMode] = useState<boolean>(false)
@@ -49,6 +50,8 @@ const UnicodeInspector = () => {
     const [customFontError, setCustomFontError] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
+    // do we really need to memoize this?
+    // maybe, but we shouldnt be changing it too often
     const fontOptions = useMemo(() => {
         const options = [
             {
@@ -102,28 +105,25 @@ const UnicodeInspector = () => {
         return options
     }, [customFont, customFontName])
 
+    // CSSOM hax to inject the custom font
+    // is this even a hack? im not sure
     useEffect(() => {
         if (!customFont) return
-
-        const style = document.createElement("style")
-        style.textContent = `
-        @font-face {
-          font-family: 'CustomFont';
-          src: url(${customFont});
-          font-weight: normal;
-          font-style: normal;
-        }
-        .font-custom {
-          font-family: 'CustomFont', system-ui, sans-serif;
-        }
-      `
-        document.head.appendChild(style)
-
+    
+        const font = new FontFace('CustomFont', `url(${customFont})`)
+        document.fonts.add(font)
+    
+        font.load().then(() => {
+          document.body.classList.add('font-custom')
+        })
+    
         return () => {
-            document.head.removeChild(style)
+          document.fonts.delete(font)
+          document.body.classList.remove('font-custom')
         }
-    }, [customFont])
+      }, [customFont])
 
+    // toggle group options for view mode
     const viewModeOptions = [
         {
             value: "detailed",
@@ -144,6 +144,8 @@ const UnicodeInspector = () => {
             ),
         },
     ]
+
+    // toggle group options for character mode
     const characterModeOptions = [
         {
             value: "individual",
@@ -178,6 +180,8 @@ const UnicodeInspector = () => {
 
                     const codePoint = input.codePointAt(0) || 0
                     const fallbackName = getUnicodeName(codePoint)
+
+                    // raw html bad
                     if (fallbackName !== undefined) {
                         return `${fallbackName} <span class="text-xs italic text-muted-foreground">+ additional characters</span>`
                     }
@@ -193,6 +197,7 @@ const UnicodeInspector = () => {
         []
     )
 
+    // the show must go on
     useEffect(() => {
         if (!input) {
             setCharacters([])
@@ -219,10 +224,12 @@ const UnicodeInspector = () => {
                     let categoryInfo = null
                     let blockInfo = null
 
+                    // if we are grouping by grapheme, we need to get all the code points
                     if (groupMode && char.length > 1) {
                         for (let i = 0; i < char.length; i++) {
                             const cp = char.codePointAt(i)
                             if (cp !== undefined) {
+                                // if we are in a surrogate pair, we need to skip it
                                 if (
                                     i > 0 &&
                                     0xd800 <= char.charCodeAt(i - 1) &&
@@ -241,11 +248,10 @@ const UnicodeInspector = () => {
                         categoryInfo = null
                         blockInfo = null
                     } else {
+                        // otherwise, we can get the category and block
                         categoryInfo = getUnicodeCategory(codePoint)
                         blockInfo = getUnicodeBlock(codePoint)
                     }
-
-                    const isEmoji = isEmojiCharacter(char)
 
                     return {
                         char,
@@ -265,7 +271,7 @@ const UnicodeInspector = () => {
                             allHexCodePoints.length > 0
                                 ? allHexCodePoints
                                 : undefined,
-                        isEmoji,
+                        isEmoji: isEmojiCharacter(char),
                     }
                 })
                 .filter(Boolean) as CharacterInfo[]
@@ -279,6 +285,7 @@ const UnicodeInspector = () => {
         }
     }, [input, groupMode, getCharacterName])
 
+    // handle input change for the textarea
     const handleInputChange = useCallback(
         (e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setInput(e.target.value)
@@ -286,10 +293,12 @@ const UnicodeInspector = () => {
         []
     )
 
+    // handle clear input for the textarea
     const handleClearInput = useCallback(() => {
         setInput("")
     }, [])
 
+    // handle search filter change for the input
     const handleSearchFilterChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value.toLowerCase()
@@ -298,6 +307,7 @@ const UnicodeInspector = () => {
         []
     )
 
+    // handle delete character for the character card
     const handleDeleteCharacter = useCallback((index: number) => {
         setCharacters(prevCharacters => {
             const newCharacters = [...prevCharacters]
@@ -310,13 +320,16 @@ const UnicodeInspector = () => {
         })
     }, [])
 
+    // we probably should want a library for these kinds of things
+    // TODO: above
     const handleCopyToClipboard = useCallback((text: string) => {
         if (!text) return
 
         navigator.clipboard
             .writeText(text)
             .then(() => {
-                // Could add a toast notification here
+                // could add a toast notification here
+                // vanilla.js ftw
                 const flashElement = document.getElementById("copy-flash")
                 if (flashElement) {
                     flashElement.classList.remove("opacity-0")
@@ -357,7 +370,7 @@ const UnicodeInspector = () => {
             const file = e.target.files?.[0]
             if (!file) return
 
-            // Check if file is a supported font format
+            // check if the file has an extension that has wide browser support
             const validExtensions = [".woff", ".woff2", ".ttf", ".otf"]
             const fileExtension = file.name
                 .substring(file.name.lastIndexOf("."))
@@ -370,19 +383,19 @@ const UnicodeInspector = () => {
                 return
             }
 
-            // Create object URL for the font
+            // create blob
             const objectUrl = URL.createObjectURL(file)
             setCustomFont(objectUrl)
 
-            // Extract font name from file name
+            // get the font name & set it
             const fontName = file.name.substring(0, file.name.lastIndexOf("."))
             setCustomFontName(fontName)
 
-            // Set selected font to custom
+            // set the selected font to custom
             setSelectedFont("font-custom")
             setCustomFontError(null)
 
-            // Reset file input
+            // reset the file input
             if (fileInputRef.current) {
                 fileInputRef.current.value = ""
             }
@@ -424,10 +437,13 @@ const UnicodeInspector = () => {
     const hasFilteredCharacters = filteredCharacters.length > 0
     const showNoCharactersMessage = hasCharacters && !hasFilteredCharacters
 
+    // we honestly should have a virtual infinite scroll here to improve performance
+    // if you have more than ~300 characters, it will start to lag BADLY
+    // its probably like 50mb of raw html in the dom
     return (
         <div className="grow flex flex-col p-3 sm:p-4 md:p-6 lg:p-8">
             <div className="w-full max-w-5xl mx-auto space-y-4 sm:space-y-6">
-                {/* Hidden */}
+                {/* input for the font upload (hidden so you can just drag something onto the page) */}
                 <input
                     type="file"
                     ref={fileInputRef}

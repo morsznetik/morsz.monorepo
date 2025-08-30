@@ -82,6 +82,9 @@ const CharacterCard = ({
 
                         <p className="text-foreground text-xs max-w-full overflow-hidden mt-0.5">
                             {charInfo.name ? (
+                                // this whole thing is one big bad hack, used to display
+                                // "+ additional characters" in the character name
+                                // HACK: fix on aisle 9
                                 charInfo.name.includes("<span") ? (
                                     <span
                                         className="inline-block max-w-full overflow-hidden text-ellipsis"
@@ -135,7 +138,7 @@ const CharacterCard = ({
                     </div>
                 </CardContent>
             ) : (
-                // Detailed View (unchanged)
+                // normal view (details unchanged for now)
                 <CardContent>
                     <div className="flex flex-col w-full">
                         <div className="flex flex-row items-center">
@@ -179,7 +182,7 @@ const CharacterCard = ({
                             </div>
                         </div>
 
-                        {/* Character Details - Only show if not in compact view */}
+                        {/* Details View */}
                         <div className="p-4 md:p-5 space-y-4 md:space-y-5">
                             {/* Properties & Resources in 2 columns */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">

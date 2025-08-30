@@ -18,16 +18,17 @@ const CharacterSpawner = ({ onSpawn, selectedFont }: CharacterSpawnerProps) => {
     const [previewChar, setPreviewChar] = useState("")
     const [error, setError] = useState("")
 
-    // Update preview character when code point input changes
+    // update preview when the input changes
     useEffect(() => {
         try {
             if (codePointInput.trim()) {
-                // Handle hex input directly without U+ prefix
+                // throw out the U+ prefix
                 const hexValue = codePointInput.trim()
 
                 const codePoint = Number.parseInt(hexValue, 16)
                 if (!isNaN(codePoint)) {
                     if (codePoint > 0x10ffff) {
+                        // 0x10ffff is the max code point in UTF-16
                         setError("Invalid code point (max 10FFFF)")
                         setPreviewChar("")
                     } else {
@@ -48,11 +49,11 @@ const CharacterSpawner = ({ onSpawn, selectedFont }: CharacterSpawnerProps) => {
         }
     }, [codePointInput])
 
-    // Handle code point input change
+    // limit which characters can be entered
     const handleCodePointInputChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value
-            // Only allow hex characters (0-9, A-F, a-f) and limit to 6 characters
+            // regex to only allow hex and up to 6 chars
             if (value === "" || /^[0-9A-Fa-f]{1,6}$/.test(value)) {
                 setCodePointInput(value)
             }
@@ -60,22 +61,20 @@ const CharacterSpawner = ({ onSpawn, selectedFont }: CharacterSpawnerProps) => {
         []
     )
 
-    // Handle spawn from code point
+    // handle the spawn button
     const handleSpawnFromCodePoint = useCallback(() => {
         if (previewChar) {
-            // Call the onSpawn callback
             onSpawn(previewChar)
 
-            // Clear the input and preview
+            // nuke it
             setCodePointInput("")
             setPreviewChar("")
         }
     }, [previewChar, onSpawn])
 
-    // Check if the spawn button should be enabled
     const isSpawnButtonEnabled = previewChar !== ""
 
-    // Handle key down event for the input
+    // keybind for enter
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === "Enter" && previewChar) {
@@ -108,7 +107,7 @@ const CharacterSpawner = ({ onSpawn, selectedFont }: CharacterSpawnerProps) => {
                                 value={codePointInput}
                                 onChange={handleCodePointInputChange}
                                 onKeyDown={handleKeyDown}
-                                placeholder="1F600"
+                                placeholder="1F600" // :joy:
                                 maxLength={6}
                                 title="Enter a hex code with max 6 characters"
                                 className="flex-1 font-mono text-sm h-9"

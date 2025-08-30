@@ -2,6 +2,9 @@ import { ExternalLink } from "./types"
 import unicodeBlocks from "@/helpers/unicode-name/blocks-categories"
 import unicodeProperties from "unicode-properties"
 
+// this is old code i found in the previous version (i lost the commit history)
+// its fine for now but if there's a better way to do this, it shall be changed
+
 /**
  * Get external links for a Unicode character based on its code point
  */

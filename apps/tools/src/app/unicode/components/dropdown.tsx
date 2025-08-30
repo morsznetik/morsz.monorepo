@@ -9,7 +9,6 @@ import { cn } from "@morsz/ui/utils"
 
 import React from "react"
 
-// Dropdown Component
 interface DropdownProps {
     options: { value: string; label: React.ReactNode }[]
     value: string

@@ -1,4 +1,3 @@
-// Character Information Interface
 export interface CharacterInfo {
     char: string
     codePoint: number
@@ -10,7 +9,8 @@ export interface CharacterInfo {
     allCodePoints?: number[]
     allHexCodePoints?: string[]
     isEmoji?: boolean
-    // Additional properties from original interface
+    
+    // legacy/old properties
     script?: string
     bidiClass?: string
     combiningClass?: string
@@ -27,10 +27,7 @@ export interface CharacterInfo {
     isRgi?: boolean
 }
 
-// View Mode Type
 export type ViewMode = "grid" | "list"
-
-// Character Mode Type
 export type CharacterMode =
     | "all"
     | "emoji"
@@ -40,14 +37,12 @@ export type CharacterMode =
     | "punctuation"
     | "other"
 
-// Font Option Type
 export type FontOption = {
     value: string
     label: string
     className: string
 }
 
-// External Link Interface
 export interface ExternalLink {
     name: string
     url: string

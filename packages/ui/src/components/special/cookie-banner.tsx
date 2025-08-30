@@ -4,7 +4,7 @@ import { Button } from "../button"
 import { Card } from "../card"
 import { cn } from "../../lib/utils"
 import { Cookie, X } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 type CookieBannerPosition =
     | "bottom-right"
@@ -16,6 +16,8 @@ type CookieBannerPosition =
 
 type UICookieBannerProps = {
     visible?: boolean
+    consentVersion?: string
+    storageKey?: string
     title?: string
     message?: string
     icon?: React.ReactNode
@@ -24,13 +26,15 @@ type UICookieBannerProps = {
     className?: string
     position?: CookieBannerPosition
     actions?: React.ReactNode
-    onAllow: () => void
-    onDecline: () => void
+    onAllow?: () => void
+    onDecline?: () => void
     onClose?: () => void
 }
 
 const UICookieBanner = ({
-    visible = true,
+    visible,
+    consentVersion = "demo-0",
+    storageKey = "cookie_consent",
     title,
     message = "This site doesn't use cookies yet, but we added this banner to demo it to you.",
     icon,
@@ -44,12 +48,46 @@ const UICookieBanner = ({
     onClose,
 }: UICookieBannerProps) => {
     const [mounted, setMounted] = useState(false)
+    const [dismissed, setDismissed] = useState(false)
 
     useEffect(() => {
         setMounted(true)
     }, [])
 
-    if (!mounted || !visible) return null
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem(storageKey)
+            if (raw) {
+                const parsed = JSON.parse(raw) as { version?: string; accepted?: boolean; timestamp?: number }
+                if (parsed && parsed.version === consentVersion) {
+                    setDismissed(true)
+                }
+            }
+        } catch {}
+    }, [storageKey, consentVersion])
+
+    const defaultAllow = useCallback(() => {
+        try {
+            const record = { version: consentVersion, accepted: true, timestamp: Date.now() }
+            localStorage.setItem(storageKey, JSON.stringify(record))
+        } catch {}
+        setDismissed(true)
+    }, [storageKey, consentVersion])
+
+    const defaultDecline = useCallback(() => {
+        try {
+            const record = { version: consentVersion, accepted: false, timestamp: Date.now() }
+            localStorage.setItem(storageKey, JSON.stringify(record))
+        } catch {}
+        setDismissed(true)
+    }, [storageKey, consentVersion])
+
+    const isVisible = useMemo(() => {
+        if (typeof visible === "boolean") return visible
+        return !dismissed
+    }, [visible, dismissed])
+
+    if (!mounted || !isVisible) return null
 
     const mobileBaseClass = "fixed bottom-3 inset-x-0 flex justify-center px-3 z-50 sm:px-0"
     let smPositionClass = "sm:bottom-5 sm:right-5 sm:inset-auto"
@@ -93,14 +131,14 @@ const UICookieBanner = ({
                                             variant="outline"
                                             size="sm"
                                             className={cn("bg-muted hover:bg-muted/80", "rounded-lg px-2.5 h-9 sm:h-8", "w-full sm:w-auto")}
-                                            onClick={onDecline}
+                                            onClick={onDecline ?? defaultDecline}
                                         >
                                             {declineLabel}
                                         </Button>
                                         <Button
                                             size="sm"
                                             className={cn("bg-foreground text-background hover:bg-foreground/90", "rounded-lg px-2.5 h-9 sm:h-8", "w-full sm:w-auto")}
-                                            onClick={onAllow}
+                                            onClick={onAllow ?? defaultAllow}
                                         >
                                             {allowLabel}
                                         </Button>
