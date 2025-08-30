@@ -16,11 +16,7 @@
     },
     "scripts": {
         "build:styles": "bunx tailwindcss -i ./globals.css -o ./dist/index.css",
-        "build:components": "tsc",
-        "check-types": "tsc --noEmit",
         "dev:styles": "bunx tailwindcss -i ./globals.css -o ./dist/index.css --watch",
-        "dev:components": "tsc --watch",
-        "lint": "eslint src --max-warnings 0",
         "format": "prettier --cache --write ."
     },
     "devDependencies": {

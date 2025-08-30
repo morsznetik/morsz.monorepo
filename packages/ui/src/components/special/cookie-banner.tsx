@@ -68,7 +68,9 @@ const UICookieBanner = ({
                     setDismissed(true)
                 }
             }
-        } catch {}
+        } catch {
+            // ignore localStorage errors
+        }
     }, [storageKey, consentVersion])
 
     const defaultAllow = useCallback(() => {
@@ -79,7 +81,9 @@ const UICookieBanner = ({
                 timestamp: Date.now(),
             }
             localStorage.setItem(storageKey, JSON.stringify(record))
-        } catch {}
+        } catch {
+            // same here as above
+        }
         setDismissed(true)
     }, [storageKey, consentVersion])
 
@@ -91,7 +95,9 @@ const UICookieBanner = ({
                 timestamp: Date.now(),
             }
             localStorage.setItem(storageKey, JSON.stringify(record))
-        } catch {}
+        } catch {
+            // Ignore localStorage errors (e.g., in private browsing mode)
+        }
         setDismissed(true)
     }, [storageKey, consentVersion])
 
