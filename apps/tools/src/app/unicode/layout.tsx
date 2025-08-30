@@ -4,15 +4,15 @@ import type { ReactNode } from "react"
 export async function generateMetadata({
     searchParams,
 }: {
-    searchParams: { hex?: string }
+    searchParams: { [key: string]: string | string[] | undefined }
 }): Promise<Metadata> {
     const hex = searchParams.hex
     
-    if (hex) {
+    if (hex && typeof hex === 'string') {
         const decodedInput = hex
             .split("-")
             .filter(Boolean)
-            .map(h => {
+            .map((h: string) => {
                 const cp = parseInt(h, 16)
                 if (Number.isNaN(cp)) return ""
                 return String.fromCodePoint(cp)
