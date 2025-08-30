@@ -1,4 +1,5 @@
-import type { Metadata, Viewport } from "next"
+import type { Metadata } from "next"
+
 import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
@@ -15,10 +16,6 @@ export const metadata: Metadata = {
         title: "Polish Latin to Cyrillic",
         description: "convert polish latin to cyrillic",
     },
-}
-
-export const viewport: Viewport = {
-    themeColor: "#93c5fd",
 }
 
 export default function PolishLatinToCyrillicLayout({

@@ -1,4 +1,5 @@
-import type { Metadata, Viewport } from "next"
+import type { Metadata } from "next"
+
 import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
@@ -15,10 +16,6 @@ export const metadata: Metadata = {
         title: "Password Strength Checker",
         description: "check a password's strength using data from HiveSystems.",
     },
-}
-
-export const viewport: Viewport = {
-    themeColor: "#93c5fd",
 }
 
 export default function PasswordCheckerLayout({

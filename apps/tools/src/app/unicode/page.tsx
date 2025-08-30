@@ -34,14 +34,22 @@ import {
     X,
 } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react"
+
+import React, {
+    Suspense,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react"
 
 // this handles the url synchronization, renders page instantly
 // then fills the data from the url into the page
-const URLSyncHandler = ({ 
-    onInitialInput, 
-    input
-}: { 
+const URLSyncHandler = ({
+    onInitialInput,
+    input,
+}: {
     onInitialInput: (input: string) => void
     input: string
 }) => {
@@ -513,12 +521,9 @@ const UnicodeInspector = () => {
     return (
         <div className="grow flex flex-col p-3 sm:p-4 md:p-6 lg:p-8">
             <Suspense fallback={null}>
-                <URLSyncHandler 
-                    onInitialInput={setInput}
-                    input={input}
-                />
+                <URLSyncHandler onInitialInput={setInput} input={input} />
             </Suspense>
-            
+
             <div className="w-full max-w-5xl mx-auto space-y-4 sm:space-y-6">
                 {/* input for the font upload (hidden so you can just drag something onto the page) */}
                 <input

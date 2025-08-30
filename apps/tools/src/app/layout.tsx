@@ -60,11 +60,13 @@ export const metadata: Metadata = {
         url: "https://tools.morsz.dev",
         siteName: "tools.morsz.dev",
         title: "tools.morsz.dev",
-        description: "a collection of web based tools i built for myself or friends.",
+        description:
+            "a collection of web based tools i built for myself or friends.",
     },
     twitter: {
         card: "summary_large_image",
         title: "tools.morsz.dev",
-        description: "a collection of web based tools i built for myself or friends.",
+        description:
+            "a collection of web based tools i built for myself or friends.",
     },
 }

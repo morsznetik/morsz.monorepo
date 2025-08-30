@@ -18,7 +18,6 @@ import {
     Type,
 } from "lucide-react"
 
-
 const tools = [
     {
         title: "Unicode Inspector",
