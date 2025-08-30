@@ -42,13 +42,13 @@ const CharacterCard = ({
 
     return (
         <Card
-            className={`bg-card/80 rounded-lg overflow-hidden border border-border shadow-md hover:shadow-2xl hover:z-10 hover:border-border/80 hover:bg-card/90 w-full ${compactView ? "h-full" : ""}`}
+            className={`bg-card rounded-lg overflow-hidden border border-border shadow-sm hover:shadow-md hover:z-10 w-full ${compactView ? "h-full" : ""}`}
         >
             {compactView ? (
                 <CardContent className="p-3 h-full flex items-center gap-3">
                     {/* Character Display */}
                     <div
-                        className={`flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg border border-border`}
+                        className={`flex-shrink-0 size-12 flex items-center justify-center rounded-lg border border-border`}
                     >
                         <span
                             className={`text-2xl ${fontFamily}`}
@@ -171,7 +171,7 @@ const CharacterCard = ({
                                     onClick={() => onDelete(index)}
                                     variant="ghost"
                                     size="sm"
-                                    className="h-8 w-8 md:h-10 md:w-10 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10 flex-shrink-0"
+                                    className="h-8 w-8 md:h-10 md:w-10 p-0 text-muted-foreground hover:text-destructive/10 flex-shrink-0"
                                     title="Delete character"
                                 >
                                     <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
@@ -189,54 +189,50 @@ const CharacterCard = ({
                                         <Tag className="w-4 h-4 md:w-5 md:h-5" />
                                         Properties
                                     </h4>
-                                    <div className="bg-muted/50 p-3 md:p-4 rounded-md md:rounded-lg shadow-inner space-y-3 border border-border">
-                                        <div className="flex flex-col sm:flex-row sm:items-center">
-                                            <span className="text-brand-purple-light text-xs md:text-sm w-24 flex-shrink-0 mb-0.5 sm:mb-0">
-                                                Name:
-                                            </span>
-                                            <div className="flex-1 min-w-0">
-                                                {charInfo.name ? (
-                                                    charInfo.name.includes(
-                                                        "<span"
-                                                    ) ? (
-                                                        <span
-                                                            className="text-foreground text-sm md:text-base font-medium break-words inline-block w-full"
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: charInfo.name,
-                                                            }}
-                                                        />
+                                    <div className="bg-muted/50 p-3 md:p-4 rounded-md md:rounded-lg shadow-inner border border-border">
+                                        <dl className="space-y-2 md:space-y-3">
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 sm:items-start gap-1.5 sm:gap-3">
+                                                <dt className="text-brand-purple-light text-xs md:text-sm sm:col-span-1">
+                                                    Name:
+                                                </dt>
+                                                <dd className="text-foreground text-sm md:text-base font-medium break-words sm:col-span-2 min-w-0">
+                                                    {charInfo.name ? (
+                                                        charInfo.name.includes("<span") ? (
+                                                            <span
+                                                                className="inline-block w-full break-words"
+                                                                dangerouslySetInnerHTML={{ __html: charInfo.name }}
+                                                            />
+                                                        ) : (
+                                                            <span className="inline-block w-full break-words">
+                                                                {charInfo.name}
+                                                            </span>
+                                                        )
                                                     ) : (
-                                                        <span className="text-foreground text-sm md:text-base font-medium break-words inline-block w-full">
-                                                            {charInfo.name}
-                                                        </span>
-                                                    )
-                                                ) : (
-                                                    <span className="text-foreground text-sm md:text-base font-medium break-words">
-                                                        Unknown
-                                                    </span>
-                                                )}
+                                                        <span>Unknown</span>
+                                                    )}
+                                                </dd>
                                             </div>
-                                        </div>
-                                        {charInfo.category && (
-                                            <div className="flex flex-col sm:flex-row sm:items-center">
-                                                <span className="text-brand-purple-light text-xs md:text-sm w-24 mb-0.5 sm:mb-0">
-                                                    Category:
-                                                </span>
-                                                <span className="text-foreground text-sm md:text-base">
-                                                    {charInfo.category}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {charInfo.block && (
-                                            <div className="flex flex-col sm:flex-row sm:items-center">
-                                                <span className="text-brand-purple-light text-xs md:text-sm w-24 mb-0.5 sm:mb-0">
-                                                    Block:
-                                                </span>
-                                                <span className="text-foreground text-sm md:text-base">
-                                                    {charInfo.block}
-                                                </span>
-                                            </div>
-                                        )}
+                                            {charInfo.category && (
+                                                <div className="grid grid-cols-1 sm:grid-cols-3 sm:items-start gap-1.5 sm:gap-3">
+                                                    <dt className="text-brand-purple-light text-xs md:text-sm sm:col-span-1">
+                                                        Category:
+                                                    </dt>
+                                                    <dd className="text-foreground text-sm md:text-base sm:col-span-2 break-words">
+                                                        {charInfo.category}
+                                                    </dd>
+                                                </div>
+                                            )}
+                                            {charInfo.block && (
+                                                <div className="grid grid-cols-1 sm:grid-cols-3 sm:items-start gap-1.5 sm:gap-3">
+                                                    <dt className="text-brand-purple-light text-xs md:text-sm sm:col-span-1">
+                                                        Block:
+                                                    </dt>
+                                                    <dd className="text-foreground text-sm md:text-base sm:col-span-2 break-words">
+                                                        {charInfo.block}
+                                                    </dd>
+                                                </div>
+                                            )}
+                                        </dl>
                                     </div>
                                 </div>
 
@@ -246,7 +242,7 @@ const CharacterCard = ({
                                         <ExternalLink className="w-4 h-4 md:w-5 md:h-5" />
                                         External Resources
                                     </h4>
-                                    <div className="bg-muted/50 p-3 md:p-4 rounded-md md:rounded-lg shadow-inner border border-border">
+                                    <div className="bg-muted/40 md:bg-muted/50 p-3 md:p-4 rounded-md md:rounded-lg border border-border">
                                         <div className="flex flex-wrap gap-2">
                                             {getExternalLinksForChar(
                                                 charInfo.codePoint
@@ -286,7 +282,7 @@ const CharacterCard = ({
                                     <CodeXml className="w-4 h-4 md:w-5 md:h-5" />
                                     Encodings
                                 </h4>
-                                <div className="bg-muted/50 p-3 md:p-4 rounded-md md:rounded-lg shadow-inner grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 border border-border">
+                                <div className="bg-muted/40 md:bg-muted/50 p-3 md:p-4 rounded-md md:rounded-lg grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 border border-border">
                                     {isGrapheme ? (
                                         <>
                                             <div className="md:col-span-3">

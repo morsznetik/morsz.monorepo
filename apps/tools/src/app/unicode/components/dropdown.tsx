@@ -33,7 +33,7 @@ const Dropdown = ({
                 </span>
             )}
             <Select value={value} onValueChange={onChange}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full" size="default">
                     <SelectValue placeholder="Select an option" />
                 </SelectTrigger>
                 <SelectContent>
@@ -43,7 +43,7 @@ const Dropdown = ({
                         </SelectItem>
                     ))}
                     {label === "Display Font" && (
-                        <div className="px-3 py-2 text-xs text-muted-foreground italic border-t border-border bg-muted/50">
+                        <div className="px-3 py-2 text-xs text-muted-foreground italic border-t border-border bg-muted/30">
                             <span className="flex items-center">
                                 Character display may vary by browser, or device
                             </span>

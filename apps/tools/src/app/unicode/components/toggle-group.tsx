@@ -39,7 +39,7 @@ const ToggleGroup = ({
                         key={option.value}
                         value={option.value}
                         className={cn(
-                            "flex-1 px-3 py-2 text-sm flex items-center justify-center data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-sm data-[state=on]:border data-[state=on]:border-primary/50 hover:bg-accent hover:text-accent-foreground",
+                            "flex-1 h-9 px-3 text-sm flex items-center justify-center data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-sm data-[state=on]:border data-[state=on]:border-primary/50 hover:bg-accent hover:text-accent-foreground",
                             index === 0 && "rounded-l-md",
                             index === options.length - 1 && "rounded-r-md"
                         )}

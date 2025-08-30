@@ -25,8 +25,8 @@ const CodeBlock = ({
                 </div>
                 <div
                     className={`
-                    mt-1 font-mono text-xs sm:text-sm bg-muted/80 text-foreground
-                    ${compact ? "px-2.5 py-1" : "px-3 py-2"} 
+                    mt-1 font-mono text-xs sm:text-sm bg-muted/40 md:bg-muted/60 text-foreground
+                    ${compact ? "px-2.5 py-1" : "px-3 py-2"}
                     rounded-lg border border-border overflow-x-auto
                 `}
                 >

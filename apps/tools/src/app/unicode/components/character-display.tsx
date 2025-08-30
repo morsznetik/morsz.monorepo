@@ -52,11 +52,11 @@ const CharacterDisplay = ({
             <div
                 ref={containerRef}
                 className={`
-                    ${compactView ? "text-4xl sm:text-5xl p-2" : "text-5xl sm:text-6xl md:text-7xl p-3 sm:p-4"} 
-                    ${fontFamily} 
-                    bg-gradient-to-br from-muted/80 to-muted/60 rounded-lg flex items-center justify-center border border-border
-                    hover:from-muted hover:to-muted/80 hover:border-border/80 min-w-3 shadow-inner
-                    ${compactView ? "w-12 h-12 sm:w-16 sm:h-16" : "w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28"}
+                    ${compactView ? "text-4xl sm:text-5xl p-2" : "text-5xl sm:text-6xl md:text-7xl p-3 sm:p-4"}
+                    ${fontFamily}
+                    bg-muted/50 rounded-lg flex items-center justify-center border border-border
+                    hover:bg-muted/70
+                    ${compactView ? "size-12 sm:size-16" : "size-20 sm:size-24 md:size-28"}
                 `}
             >
                 <span

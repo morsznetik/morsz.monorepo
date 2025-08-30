@@ -86,7 +86,7 @@ const CharacterSpawner = ({ onSpawn, selectedFont }: CharacterSpawnerProps) => {
     )
 
     return (
-        <Card className="bg-card/80 rounded-xl shadow-xl border border-border backdrop-blur-sm">
+        <Card className="bg-card rounded-xl border border-border shadow-sm">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-brand-blue dark:text-brand-blue-light flex items-center gap-2">
                     <PlusCircle className="w-5 h-5" />
@@ -99,11 +99,9 @@ const CharacterSpawner = ({ onSpawn, selectedFont }: CharacterSpawnerProps) => {
                         <span className="text-xs text-muted-foreground mb-1 block">
                             Enter Unicode Code Point
                         </span>
-                        <div className="relative flex items-stretch">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pr-2 pointer-events-none bg-muted/50 border-r border-border rounded-l-lg">
-                                <span className="text-sm text-muted-foreground">
-                                    U+
-                                </span>
+                        <div className="flex items-center gap-2">
+                            <div className="flex items-center h-9 rounded-md border border-border bg-muted/50 text-muted-foreground px-2.5 select-none">
+                                <span className="text-xs font-medium tracking-wider">U+</span>
                             </div>
                             <Input
                                 type="text"
@@ -113,12 +111,12 @@ const CharacterSpawner = ({ onSpawn, selectedFont }: CharacterSpawnerProps) => {
                                 placeholder="1F600"
                                 maxLength={6}
                                 title="Enter a hex code with max 6 characters"
-                                className="flex-1 pl-12 pr-3 py-2.5 font-mono text-sm"
+                                className="flex-1 font-mono text-sm h-9"
                             />
                             <Button
                                 onClick={handleSpawnFromCodePoint}
                                 disabled={!isSpawnButtonEnabled}
-                                className="ml-2 flex items-center gap-1.5"
+                                className="flex items-center gap-1.5 h-9"
                             >
                                 <PlusCircle className="w-4 h-4" />
                                 Add

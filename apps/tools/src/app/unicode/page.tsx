@@ -472,7 +472,7 @@ const UnicodeInspector = () => {
                 )}
 
                 {/* Input Section */}
-                <Card className="bg-card/80 rounded-xl shadow-xl border border-border backdrop-blur-sm">
+                <Card className="bg-card rounded-xl border border-border shadow-sm">
                     <CardContent className="space-y-3 sm:space-y-4">
                         <div className="flex flex-wrap justify-between items-center gap-2">
                             <span className="text-lg sm:text-base font-medium text-brand-blue dark:text-brand-blue-light">

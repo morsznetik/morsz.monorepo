@@ -1,4 +1,5 @@
 import ListLocalStorageButton from "@/app/settings/listLocalStorageButton"
+import ResetLocalStorageButton from "@/app/settings/resetLocalStorageButton"
 import ThemeSwitch from "@morsz/ui/special/theme-switch"
 
 const Settings = () => {
@@ -13,6 +14,7 @@ const Settings = () => {
                     all changes are saved locally, in localStorage
                 </p>
                 <ListLocalStorageButton />
+                <ResetLocalStorageButton />
             </div>
             <div className="flex items-center justify-center gap-2">
                 <p className="mr-1">

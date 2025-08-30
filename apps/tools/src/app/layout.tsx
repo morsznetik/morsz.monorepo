@@ -5,6 +5,7 @@ import Providers from "@/app/providers"
 import Navbar from "@morsz/ui/special/navbar"
 import ThemeScriptHack from "@morsz/ui/special/theme-script"
 import { zxProto } from "@morsz/ui/styles/fonts"
+import CookieBanner from "@/app/cookie-banner"
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -12,12 +13,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             <head>
                 <ThemeScriptHack />
             </head>
-            <body className={`theme-transition ${zxProto.className}`}>
+            <body className={`transition-colors transition-discrete ${zxProto.className}`}>
                 <Providers>
                     <Navbar />
                     <main className="pl-0 pb-24 sm:pb-0 sm:pl-24">
                         {children}
                     </main>
+                    <CookieBanner />
                 </Providers>
             </body>
         </html>
