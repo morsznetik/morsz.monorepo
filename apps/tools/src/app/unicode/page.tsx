@@ -33,26 +33,18 @@ import {
     Upload,
     X,
 } from "lucide-react"
-import type { Metadata } from "next"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react"
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-
-const UnicodeInspector = () => {
-    // useState ftw (i dont wanna learn zustand yet)
-    const [input, setInput] = useState<string>("")
-    const [characters, setCharacters] = useState<CharacterInfo[]>([])
-    const [groupMode, setGroupMode] = useState<boolean>(false)
-    const [searchFilter, setSearchFilter] = useState<string>("")
-    const [compactView, setCompactView] = useState<boolean>(false)
-    const [selectedFont, setSelectedFont] = useState<string>("font-default")
-    const [showRgiWarning, setShowRgiWarning] = useState<boolean>(false)
-    const [customFont, setCustomFont] = useState<string | null>(null)
-    const [customFontName, setCustomFontName] = useState<string>("Custom Font")
-    const [customFontError, setCustomFontError] = useState<string | null>(null)
-    const fileInputRef = useRef<HTMLInputElement>(null)
-
-    // url sync
+// this handles the url synchronization, renders page instantly
+// then fills the data from the url into the page
+const URLSyncHandler = ({ 
+    onInitialInput, 
+    input
+}: { 
+    onInitialInput: (input: string) => void
+    input: string
+}) => {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -91,9 +83,12 @@ const UnicodeInspector = () => {
         try {
             const initialHex = searchParams.get("hex")
             if (initialHex) {
-                setInput(decodeFromHexParam(initialHex))
+                const decodedInput = decodeFromHexParam(initialHex)
+                onInitialInput(decodedInput)
             }
-        } catch {}
+        } catch {
+            // Handle error silently
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -103,8 +98,27 @@ const UnicodeInspector = () => {
             const hex = encodeToHexParam(input)
             const newUrl = hex ? `${pathname}?hex=${hex}` : pathname
             router.replace(newUrl, { scroll: false })
-        } catch {}
+        } catch {
+            // Handle error silently
+        }
     }, [input, pathname, router, encodeToHexParam, decodeFromHexParam])
+
+    return null // This component doesn't render anything
+}
+
+const UnicodeInspector = () => {
+    // useState ftw (i dont wanna learn zustand yet)
+    const [input, setInput] = useState<string>("")
+    const [characters, setCharacters] = useState<CharacterInfo[]>([])
+    const [groupMode, setGroupMode] = useState<boolean>(false)
+    const [searchFilter, setSearchFilter] = useState<string>("")
+    const [compactView, setCompactView] = useState<boolean>(false)
+    const [selectedFont, setSelectedFont] = useState<string>("font-default")
+    const [showRgiWarning, setShowRgiWarning] = useState<boolean>(false)
+    const [customFont, setCustomFont] = useState<string | null>(null)
+    const [customFontName, setCustomFontName] = useState<string>("Custom Font")
+    const [customFontError, setCustomFontError] = useState<string | null>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     // do we really need to memoize this?
     // maybe, but we shouldnt be changing it too often
@@ -498,6 +512,13 @@ const UnicodeInspector = () => {
     // its probably like 50mb of raw html in the dom
     return (
         <div className="grow flex flex-col p-3 sm:p-4 md:p-6 lg:p-8">
+            <Suspense fallback={null}>
+                <URLSyncHandler 
+                    onInitialInput={setInput}
+                    input={input}
+                />
+            </Suspense>
+            
             <div className="w-full max-w-5xl mx-auto space-y-4 sm:space-y-6">
                 {/* input for the font upload (hidden so you can just drag something onto the page) */}
                 <input

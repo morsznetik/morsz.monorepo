@@ -17,7 +17,7 @@ import {
     Search,
     Type,
 } from "lucide-react"
-import type { Metadata } from "next"
+
 
 const tools = [
     {
