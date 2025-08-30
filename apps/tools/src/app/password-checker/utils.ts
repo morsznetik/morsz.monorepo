@@ -365,7 +365,6 @@ export function getStrength(
     if (pw.length > TABLE_LENGTH) {
         // find the last two parseable numeric entries in the table
         let lastIdx = TABLE_LENGTH - 1
-        let prevIdx = TABLE_LENGTH - 2
         let lastTime: number | null = null
         let prevTime: number | null = null
 
@@ -380,7 +379,6 @@ export function getStrength(
                         lastIdx = i
                     } else if (prevTime === null) {
                         prevTime = t
-                        prevIdx = i
                         break
                     }
                 }

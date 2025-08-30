@@ -22,7 +22,9 @@ const ResetLocalStorageButton = () => {
             setCleared(true)
             // Feedback timeout
             setTimeout(() => setCleared(false), 1200)
-        } catch {}
+        } catch {
+            // ignore storage access errors (private mode or blocked)
+        }
     }, [])
 
     return (
