@@ -15,6 +15,7 @@ import {
     Palette,
     Play,
     Search,
+    Terminal,
     Type,
 } from "lucide-react"
 
@@ -54,6 +55,22 @@ const tools: ToolCardProps[] = [
         icon: <KeyRound className="h-6 w-6" />,
         href: "/password-checker",
         color: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-300",
+    },
+    {
+        title: "Lunar Engine",
+        description:
+            "a fully type-safe, DX-first CLI framework for building shell-like REPL apps in Python 3.13+",
+        icon: <Terminal className="h-6 w-6" />,
+        href: "https://github.com/morsznetik/lunar-engine",
+        color: "bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
+    },
+    {
+        title: "@.morsz.dev Monorepo",
+        description:
+            "monorepo containing this tools website and various other projects and packages",
+        icon: <CodeXml className="h-6 w-6" />,
+        href: "https://github.com/morsznetik/morsz.monorepo",
+        color: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-300",
     },
     {
         title: "Component Gallery",
