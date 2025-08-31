@@ -21,11 +21,19 @@ interface CommitInfo {
 
 interface VersionIndicatorProps {
     repo: string
-    app?: string
+    app: string // Required - which app to target (e.g., "tools")
     currentCommitHash?: string
     currentCommitMessage?: string
     className?: string
 }
+
+interface CachedCommitData {
+    commitHash: string
+    timestamp: number
+    app: string
+}
+
+const CACHE_KEY = 'commit-cache'
 
 const VersionIndicator = ({
     repo = "morsznetik/morsz.monorepo",
@@ -35,22 +43,54 @@ const VersionIndicator = ({
     className = "",
 }: VersionIndicatorProps) => {
     const isDevelopment = process.env.NODE_ENV === "development"
-    const [commitInfo, setCommitInfo] = useState<CommitInfo>({
-        current: currentCommitHash ?? "unknown",
-        latest: null,
-        isLatest: true,
-        isLoading: true,
-        error: null,
+
+    const getCachedData = (): CachedCommitData | null => {
+        if (typeof window === 'undefined') return null
+        try {
+            const cached = localStorage.getItem(CACHE_KEY)
+            if (!cached) return null
+            const data: CachedCommitData = JSON.parse(cached)
+            if (data.app !== app) {
+                localStorage.removeItem(CACHE_KEY)
+                return null
+            }
+            return data
+        } catch {
+            return null
+        }
+    }
+
+    const setCachedData = (commitHash: string) => {
+        if (typeof window === 'undefined') return
+        try {
+            const data: CachedCommitData = {
+                commitHash,
+                timestamp: Date.now(),
+                app,
+            }
+            localStorage.setItem(CACHE_KEY, JSON.stringify(data))
+        } catch {
+            // silently
+        }
+    }
+
+    const [commitInfo, setCommitInfo] = useState<CommitInfo>(() => {
+        const cached = getCachedData()
+        return {
+            current: currentCommitHash ?? "unknown",
+            latest: cached?.commitHash ?? null,
+            isLatest: cached ? (cached.commitHash === currentCommitHash) : true,
+            isLoading: cached ? false : true,
+            error: null,
+        }
     })
 
     useEffect(() => {
         const fetchLatestCommit = async () => {
             try {
                 // get latest commit from master branch filtered by app path
-                const pathParam = app ? `&path=apps/${app}` : ""
-                console.log(`https://api.github.com/repos/${repo}/commits?per_page=1${pathParam}`)
                 const commitsResponse = await fetch(
-                    `https://api.github.com/repos/${repo}/commits?per_page=1${pathParam}`,
+                    `https://api.github.com/repos/${repo}/commits?per_page=1&path=apps/${app}`,
                     {
                         headers: {
                             Accept: "application/vnd.github.v3+json",
@@ -62,6 +102,7 @@ const VersionIndicator = ({
                     const commitsData = await commitsResponse.json()
                     if (commitsData.length > 0) {
                         const latestCommitHash = commitsData[0].sha
+                        setCachedData(latestCommitHash)
                         setCommitInfo(prev => ({
                             ...prev,
                             latest: latestCommitHash,
@@ -109,23 +150,63 @@ const VersionIndicator = ({
 
     const getTooltipContent = () => {
         if (commitInfo.isLoading) {
-            return "Checking for updates..."
+            return (
+                <div className="flex items-center gap-2">
+                    <RefreshCw className="h-3 w-3 animate-spin" />
+                    <span>Checking for updates...</span>
+                </div>
+            )
         }
         if (commitInfo.error) {
-            return commitInfo.error
+            return (
+                <div className="flex items-center gap-2 text-red-400">
+                    <AlertCircle className="h-3 w-3" />
+                    <span>{commitInfo.error}</span>
+                </div>
+            )
         }
 
         const commitHash = commitInfo.current.slice(0, 7)
-        const appInfo = app ? ` for ${app} app` : ""
-        const baseMessage = commitInfo.isLatest
-            ? `You're on the latest commit${appInfo} (${commitHash})`
-            : `Update available${appInfo}: ${commitInfo.latest?.slice(0, 7)} (current: ${commitHash})`
+        const isLatest = commitInfo.isLatest
 
-        if (currentCommitMessage) {
-            return `${baseMessage}\n"${currentCommitMessage}"`
-        }
+        return (
+            <div className="space-y-2 min-w-[200px]">
+                <div className="flex items-center gap-2">
+                    {isLatest ? (
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                    ) : (
+                        <AlertCircle className="h-4 w-4 text-orange-500" />
+                    )}
+                    <span className="font-medium">
+                        {isLatest ? "Up to date" : "Update available"}
+                    </span>
+                </div>
 
-        return baseMessage
+                <div className="space-y-1 text-xs">
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">App:</span>
+                        <span className="font-mono">{app}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-muted-foreground">Current:</span>
+                        <span className="font-mono">{commitHash}</span>
+                    </div>
+                    {!isLatest && (
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">Latest:</span>
+                            <span className="font-mono">{commitInfo.latest?.slice(0, 7)}</span>
+                        </div>
+                    )}
+                </div>
+
+                {currentCommitMessage && (
+                    <div className="pt-2 border-t border-border/50">
+                        <div className="text-xs text-muted-foreground mb-1">Commit message:</div>
+                        <div className="text-xs italic">"{currentCommitMessage}"</div>
+                    </div>
+                )}
+            </div>
+        )
     }
 
     return (
@@ -149,7 +230,7 @@ const VersionIndicator = ({
                                 ) : (
                                     getStatusIcon()
                                 )}
-                                <span className="text-xs font-mono">
+                                <span className="text-xs text-muted-foreground font-mono">
                                     {isDevelopment
                                         ? "development"
                                         : commitInfo.current.slice(0, 7)}
@@ -160,11 +241,16 @@ const VersionIndicator = ({
                 </TooltipTrigger>
                 <TooltipContent
                     side="top"
-                    className="font-mono text-xs whitespace-pre-line max-w-xs"
+                    className="font-mono text-xs max-w-xs p-3"
                 >
-                    {isDevelopment
-                        ? "Development environment"
-                        : getTooltipContent()}
+                    {isDevelopment ? (
+                        <div className="flex items-center gap-2">
+                            <div className="h-3 w-3 rounded-full bg-purple-500 animate-pulse" />
+                            <span>Development environment</span>
+                        </div>
+                    ) : (
+                        getTooltipContent()
+                    )}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>
