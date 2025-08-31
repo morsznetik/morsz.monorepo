@@ -1,7 +1,6 @@
 import "./globals.css"
 import { SITE_CONFIG, getMetadataBase } from "@/app/config/urls"
 import Providers from "@/app/providers"
-import logo from "@/assets/logo.png"
 import "@morsz/tailwind-config"
 import UICookieBanner from "@morsz/ui/special/cookie-banner"
 import Navbar from "@morsz/ui/special/navbar"
@@ -66,10 +65,10 @@ export const metadata: Metadata = {
             "a collection of web based tools i built for myself or friends.",
         images: [
             {
-                url: logo.src,
-                width: logo.width,
-                height: logo.height,
-                alt: `${SITE_CONFIG.SITE_NAME} logo`,
+                url: SITE_CONFIG.LOGO.src,
+                width: SITE_CONFIG.LOGO.width,
+                height: SITE_CONFIG.LOGO.height,
+                alt: SITE_CONFIG.LOGO.alt,
             },
         ],
     },
@@ -78,6 +77,6 @@ export const metadata: Metadata = {
         title: SITE_CONFIG.SITE_NAME,
         description:
             "a collection of web based tools i built for myself or friends.",
-        images: [logo.src],
+        images: [SITE_CONFIG.LOGO.src],
     },
 }

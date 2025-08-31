@@ -1,5 +1,4 @@
 import { SITE_CONFIG, getToolUrl } from "@/app/config/urls"
-import logo from "@/assets/logo.png"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -12,10 +11,10 @@ export const metadata: Metadata = {
         url: getToolUrl(SITE_CONFIG.TOOLS.PASSWORD_CHECKER),
         images: [
             {
-                url: logo.src,
-                width: logo.width,
-                height: logo.height,
-                alt: `${SITE_CONFIG.SITE_NAME} logo`,
+                url: SITE_CONFIG.LOGO.src,
+                width: SITE_CONFIG.LOGO.width,
+                height: SITE_CONFIG.LOGO.height,
+                alt: SITE_CONFIG.LOGO.alt,
             },
         ],
     },
@@ -23,7 +22,7 @@ export const metadata: Metadata = {
         card: "summary",
         title: "Password Strength Checker",
         description: "check a password's strength using data from HiveSystems.",
-        images: [logo.src],
+        images: [SITE_CONFIG.LOGO.src],
     },
 }
 
