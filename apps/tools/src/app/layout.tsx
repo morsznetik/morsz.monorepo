@@ -5,6 +5,7 @@ import "@morsz/tailwind-config"
 import UICookieBanner from "@morsz/ui/special/cookie-banner"
 import Navbar from "@morsz/ui/special/navbar"
 import ThemeScriptHack from "@morsz/ui/special/theme-script"
+import VersionIndicator from "@morsz/ui/special/version-indicator"
 import "@morsz/ui/styles"
 import { ggSans, gnuUnifont, notoSans, zxProto } from "@morsz/ui/styles/fonts"
 import type { Metadata, Viewport } from "next"
@@ -23,6 +24,16 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                     <main className="pl-0 pb-24 sm:pb-0 sm:pl-24">
                         {children}
                     </main>
+                    <VersionIndicator
+                        repo="morsznetik/morsz.monorepo"
+                        app="tools"
+                        currentCommitHash={
+                            process.env.VERCEL_GIT_PREVIOUS_SHA // vercel env var
+                        }
+                        currentCommitMessage={
+                            process.env.VERCEL_GIT_COMMIT_MESSAGE // vercel env var
+                        }
+                    />
                     <UICookieBanner position="bottom-center" />
                 </Providers>
             </body>
