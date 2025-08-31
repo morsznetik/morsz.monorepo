@@ -28,7 +28,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                         repo="morsznetik/morsz.monorepo"
                         app="tools"
                         currentCommitHash={
-                            process.env.VERCEL_GIT_PREVIOUS_SHA // vercel env var
+                            process.env.VERCEL_GIT_COMMIT_SHA // vercel env var
                         }
                         currentCommitMessage={
                             process.env.VERCEL_GIT_COMMIT_MESSAGE // vercel env var
