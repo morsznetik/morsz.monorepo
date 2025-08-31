@@ -44,7 +44,7 @@ const VersionIndicator = ({
     className = "",
     dependencies,
 }: VersionIndicatorProps) => {
-    const isDevelopment = process.env.NODE_ENV === "development1"
+    const isDevelopment = process.env.NODE_ENV === "development"
 
     const getCachedData = (): CachedCommitData | null => {
         if (typeof window === "undefined") return null
