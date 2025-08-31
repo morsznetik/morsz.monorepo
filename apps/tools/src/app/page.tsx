@@ -15,6 +15,7 @@ import {
     Palette,
     Play,
     Search,
+    Star,
     Terminal,
     Type,
 } from "lucide-react"
@@ -147,7 +148,7 @@ const featuredTools: ToolCardProps[] = [
             ],
         },
         icon: <ForkKnifeCrossed className="h-6 w-6" />,
-        href: "https://cobalt.tools",
+        href: "https://gchq.github.io/CyberChef/",
         color: "bg-orange-500/10 text-orange-700 dark:text-orange-300",
     },
     {
@@ -215,6 +216,17 @@ const featuredTools: ToolCardProps[] = [
         icon: <Cpu className="h-6 w-6" />,
         href: "https://copy.sh/v86/",
         color: "bg-violet-500/10 text-violet-700 dark:text-violet-300",
+    },
+    {
+        title: "RealFaviconGenerator",
+        description: "generate favicons for all platforms, also supports a bunch of frameworks",
+        credits: {
+            name: "Philippe Bernard",
+            link: "https://philippebernard.dev/",
+        },
+        icon: <Star className="h-6 w-6" />,
+        href: "https://realfavicongenerator.net/",
+        color: "bg-amber-500/10 text-amber-700 dark:text-amber-300",
     },
 ]
 
