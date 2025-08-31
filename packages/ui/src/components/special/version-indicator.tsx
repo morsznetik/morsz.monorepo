@@ -44,7 +44,7 @@ const VersionIndicator = ({
     className = "",
     dependencies,
 }: VersionIndicatorProps) => {
-    const isDevelopment = process.env.NODE_ENV === "development"
+    const isDevelopment = process.env.NODE_ENV === "development1"
 
     const getCachedData = (): CachedCommitData | null => {
         if (typeof window === "undefined") return null
@@ -98,18 +98,36 @@ const VersionIndicator = ({
     }
 
     const [commitInfo, setCommitInfo] = useState<CommitInfo>(() => {
-        const cached = getCachedData()
         return {
             current: currentCommitHash ?? "unknown",
-            latest: cached?.commitHash ?? null,
-            isLatest: cached ? cached.commitHash === currentCommitHash : true,
-            isLoading: cached ? false : true,
+            latest: null,
+            isLatest: true, // assume it's latest
+            isLoading: false,
             error: null,
         }
     })
 
     useEffect(() => {
         const fetchLatestCommit = async () => {
+            const cached = getCachedData()
+
+            // if we have recent cached data (less than 5 minutes old), don't fetch
+            if (cached && (Date.now() - cached.timestamp) < 5 * 60 * 1000) {
+                setCommitInfo(prev => ({
+                    ...prev,
+                    latest: cached.commitHash,
+                    isLatest: cached.commitHash === currentCommitHash,
+                    isLoading: false,
+                }))
+                return
+            }
+
+            setCommitInfo(prev => ({
+                ...prev,
+                isLoading: true,
+                error: null,
+            }))
+
             try {
                 const watchedPaths = getWatchedPaths()
                 let latestCommitHash: string | null = null
