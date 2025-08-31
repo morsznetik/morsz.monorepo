@@ -1,6 +1,6 @@
+import { SITE_CONFIG, getToolUrl } from "@/app/config/urls"
+import logo from "@/assets/logo.png"
 import type { Metadata } from "next"
-
-import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
     title: "Password Strength Checker",
@@ -9,13 +9,13 @@ export const metadata: Metadata = {
         title: "Password Strength Checker",
         description: "check a password's strength using data from HiveSystems.",
         type: "website",
-        url: "https://tools.morsz.dev/password-checker",
+        url: getToolUrl(SITE_CONFIG.TOOLS.PASSWORD_CHECKER),
         images: [
             {
-                url: "/assets/logo.png",
-                width: 1600,
-                height: 1000,
-                alt: "tools.morsz.dev logo",
+                url: logo.src,
+                width: logo.width,
+                height: logo.height,
+                alt: `${SITE_CONFIG.SITE_NAME} logo`,
             },
         ],
     },
@@ -23,14 +23,12 @@ export const metadata: Metadata = {
         card: "summary",
         title: "Password Strength Checker",
         description: "check a password's strength using data from HiveSystems.",
-        images: ["/assets/logo.png"],
+        images: [logo.src],
     },
 }
 
-export default function PasswordCheckerLayout({
-    children,
-}: {
-    children: ReactNode
-}) {
+const PasswordCheckerLayout = ({ children }: { children: React.ReactNode }) => {
     return <>{children}</>
 }
+
+export default PasswordCheckerLayout

@@ -30,6 +30,7 @@ export interface ToolCardProps extends React.HTMLAttributes<HTMLDivElement> {
         }[]
     }
     comingSoon?: boolean
+    excludeEnvironments?: ("development" | "production" | "test")[]
 }
 
 const ToolCard = ({
@@ -40,10 +41,15 @@ const ToolCard = ({
     color,
     comingSoon = false,
     credits,
+    excludeEnvironments = [],
     ...props
 }: ToolCardProps) => {
     const { preloadNow } = usePreloadPages()
     const router = useRouter()
+
+    const shouldRender = !excludeEnvironments.includes(
+        process.env.NODE_ENV as "development" | "production" | "test"
+    )
 
     const isExternal = href?.startsWith("http")
     const label = comingSoon ? "coming soon" : "open"
@@ -59,98 +65,104 @@ const ToolCard = ({
     }
 
     return (
-        <Card
-            onMouseEnter={() => href && !isExternal && preloadNow(href)}
-            className={cn("flex flex-col justify-between gap-1")}
-            {...props}
-        >
-            <CardHeader className="pb-3">
-                <div className="flex items-center justify-between mb-2">
-                    <div className="flex-1">
-                        <CardTitle className="text-lg font-bold">
-                            {title}
-                        </CardTitle>
-                        {credits && (
-                            <p className="text-xs text-muted-foreground mt-1">
-                                <ConditionalTooltip
-                                    condition={
-                                        !!credits.authors &&
-                                        credits.authors.length > 0
-                                    }
-                                    content={
-                                        <ul className="text-sm space-y-0.5">
-                                            {credits.authors?.map(
-                                                (author, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="text-muted-foreground"
-                                                    >
-                                                        <a
-                                                            href={author.link}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="underline hover:text-foreground transition-colors"
+        shouldRender && (
+            <Card
+                onMouseEnter={() => href && !isExternal && preloadNow(href)}
+                className={cn("flex flex-col justify-between gap-1")}
+                {...props}
+            >
+                <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex-1">
+                            <CardTitle className="text-lg font-bold">
+                                {title}
+                            </CardTitle>
+                            {credits && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    <ConditionalTooltip
+                                        condition={
+                                            !!credits.authors &&
+                                            credits.authors.length > 0
+                                        }
+                                        content={
+                                            <ul className="text-sm space-y-0.5">
+                                                {credits.authors?.map(
+                                                    (author, index) => (
+                                                        <li
+                                                            key={index}
+                                                            className="text-muted-foreground"
                                                         >
-                                                            {author.name}
-                                                        </a>
-                                                    </li>
-                                                )
-                                            )}
-                                        </ul>
-                                    }
-                                    side="top"
-                                    className="max-w-xs"
-                                >
-                                    <a
-                                        href={credits.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="underline hover:text-foreground transition-colors"
+                                                            <a
+                                                                href={
+                                                                    author.link
+                                                                }
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="underline hover:text-foreground transition-colors"
+                                                            >
+                                                                {author.name}
+                                                            </a>
+                                                        </li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        }
+                                        side="top"
+                                        className="max-w-xs"
                                     >
-                                        by {credits.name}
-                                    </a>
-                                </ConditionalTooltip>
-                                {credits.source && (
-                                    <>
-                                        <span className="mx-1">•</span>
                                         <a
-                                            href={credits.source}
+                                            href={credits.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="underline hover:text-foreground transition-colors"
                                         >
-                                            source
+                                            by {credits.name}
                                         </a>
-                                    </>
-                                )}
-                            </p>
-                        )}
+                                    </ConditionalTooltip>
+                                    {credits.source && (
+                                        <>
+                                            <span className="mx-1">•</span>
+                                            <a
+                                                href={credits.source}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="underline hover:text-foreground transition-colors"
+                                            >
+                                                source
+                                            </a>
+                                        </>
+                                    )}
+                                </p>
+                            )}
+                        </div>
+                        <div className={`p-2 rounded-lg ${color}`}>{icon}</div>
                     </div>
-                    <div className={`p-2 rounded-lg ${color}`}>{icon}</div>
-                </div>
-            </CardHeader>
+                </CardHeader>
 
-            <CardContent className="flex flex-col flex-1 justify-between">
-                <CardDescription className="mb-4 text-base leading-snug">
-                    {description}
-                </CardDescription>
-                <ConditionalTooltip
-                    condition={!!isExternal}
-                    content="This leads to an external site"
-                    side="bottom"
-                >
-                    <Button
-                        className="w-full mt-auto cursor-pointer"
-                        disabled={comingSoon}
-                        variant={comingSoon ? "outline" : "default"}
-                        onClick={handleClick}
+                <CardContent className="flex flex-col flex-1 justify-between">
+                    <CardDescription className="mb-4 text-base leading-snug">
+                        {description}
+                    </CardDescription>
+                    <ConditionalTooltip
+                        condition={!!isExternal}
+                        content="This leads to an external site"
+                        side="bottom"
                     >
-                        <span>{label}</span>
-                        {isExternal && <ExternalLink className="size-4 ml-1" />}
-                    </Button>
-                </ConditionalTooltip>
-            </CardContent>
-        </Card>
+                        <Button
+                            className="w-full mt-auto cursor-pointer"
+                            disabled={comingSoon}
+                            variant={comingSoon ? "outline" : "default"}
+                            onClick={handleClick}
+                        >
+                            <span>{label}</span>
+                            {isExternal && (
+                                <ExternalLink className="size-4 ml-1" />
+                            )}
+                        </Button>
+                    </ConditionalTooltip>
+                </CardContent>
+            </Card>
+        )
     )
 }
 

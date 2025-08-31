@@ -1,5 +1,5 @@
-import Logo from "@morsz/ui/special/tools-logo"
 import ToolCard, { ToolCardProps } from "@morsz/ui/special/tool-card"
+import Logo from "@morsz/ui/special/tools-logo"
 import { obviously } from "@morsz/ui/styles/fonts"
 import {
     CodeXml,
@@ -18,7 +18,7 @@ import {
     Type,
 } from "lucide-react"
 
-const tools = [
+const tools: ToolCardProps[] = [
     {
         title: "Unicode Inspector",
         description: "inspect unicode characters and their properties",
@@ -56,16 +56,16 @@ const tools = [
         color: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-300",
     },
     {
-        // always make this one last
         title: "Component Gallery",
         description: "design, colors, and components used across this site",
         icon: <Type className="h-6 w-6" />,
         href: "/typography",
         color: "bg-blue-500/10 text-blue-700 dark:text-blue-300",
+        excludeEnvironments: ["production"],
     },
 ]
 
-const upcomingTools = [
+const upcomingTools: ToolCardProps[] = [
     {
         title: "Unicode Ascii Tags",
         description: "convert ascii into unicode tags (ie. invisible text)",
@@ -94,7 +94,7 @@ const upcomingTools = [
     },
 ]
 
-const featuredTools = [
+const featuredTools: ToolCardProps[] = [
     {
         title: "cobalt.tools",
         description:
@@ -210,6 +210,7 @@ const Home = () => {
                         key={tool.title}
                         {...tool}
                         comingSoon={comingSoon}
+                        excludeEnvironments={tool.excludeEnvironments}
                     />
                 ))}
             </div>

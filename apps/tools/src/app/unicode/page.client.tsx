@@ -34,7 +34,7 @@ import {
     Upload,
     X,
 } from "lucide-react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 
 import React, {
     Suspense,
@@ -97,6 +97,7 @@ const URLSyncHandler = ({
         } catch {
             // silently
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // sync input to URL as hex code points without pushing history
@@ -203,55 +204,61 @@ const UnicodeInspector = () => {
 
         const font = new FontFace("CustomFont", `url(${customFont})`)
         document.fonts.add(font)
-        
+
         return () => {
             document.fonts.delete(font)
         }
     }, [customFont])
 
     // toggle group options for view mode
-    const viewModeOptions = useMemo(() => [
-        {
-            value: "detailed",
-            label: (
-                <span className="flex items-center justify-center gap-1.5">
-                    <LineSquiggle className="w-3.5 h-3.5" />
-                    Detailed
-                </span>
-            ),
-        },
-        {
-            value: "compact",
-            label: (
-                <span className="flex items-center justify-center gap-1.5">
-                    <Menu className="w-3.5 h-3.5" />
-                    Compact
-                </span>
-            ),
-        },
-    ], [])
+    const viewModeOptions = useMemo(
+        () => [
+            {
+                value: "detailed",
+                label: (
+                    <span className="flex items-center justify-center gap-1.5">
+                        <LineSquiggle className="w-3.5 h-3.5" />
+                        Detailed
+                    </span>
+                ),
+            },
+            {
+                value: "compact",
+                label: (
+                    <span className="flex items-center justify-center gap-1.5">
+                        <Menu className="w-3.5 h-3.5" />
+                        Compact
+                    </span>
+                ),
+            },
+        ],
+        []
+    )
 
     // toggle group options for character mode
-    const characterModeOptions = useMemo(() => [
-        {
-            value: "individual",
-            label: (
-                <span className="flex items-center justify-center gap-1.5">
-                    <Paperclip className="w-3.5 h-3.5" />
-                    Individual
-                </span>
-            ),
-        },
-        {
-            value: "grapheme",
-            label: (
-                <span className="flex items-center justify-center gap-1.5">
-                    <GripVertical className="w-3.5 h-3.5" />
-                    Grapheme
-                </span>
-            ),
-        },
-    ], [])
+    const characterModeOptions = useMemo(
+        () => [
+            {
+                value: "individual",
+                label: (
+                    <span className="flex items-center justify-center gap-1.5">
+                        <Paperclip className="w-3.5 h-3.5" />
+                        Individual
+                    </span>
+                ),
+            },
+            {
+                value: "grapheme",
+                label: (
+                    <span className="flex items-center justify-center gap-1.5">
+                        <GripVertical className="w-3.5 h-3.5" />
+                        Grapheme
+                    </span>
+                ),
+            },
+        ],
+        []
+    )
 
     const getCharacterName = useCallback(
         (input: number | string): string | null => {
@@ -344,8 +351,12 @@ const UnicodeInspector = () => {
                         }
                     }
 
-                    charInfo.allCodePoints = allCodePoints.length > 0 ? allCodePoints : undefined
-                    charInfo.allHexCodePoints = allHexCodePoints.length > 0 ? allHexCodePoints : undefined
+                    charInfo.allCodePoints =
+                        allCodePoints.length > 0 ? allCodePoints : undefined
+                    charInfo.allHexCodePoints =
+                        allHexCodePoints.length > 0
+                            ? allHexCodePoints
+                            : undefined
                     charInfo.category = null
                     charInfo.block = null
                     charInfo.name = getCharacterName(char)
@@ -521,11 +532,20 @@ const UnicodeInspector = () => {
         })
     }, [characters, searchFilter])
 
-    const inputByteSize = useMemo(() => input ? new TextEncoder().encode(input).length : 0, [input])
+    const inputByteSize = useMemo(
+        () => (input ? new TextEncoder().encode(input).length : 0),
+        [input]
+    )
 
     const hasCharacters = useMemo(() => characters.length > 0, [characters])
-    const hasFilteredCharacters = useMemo(() => filteredCharacters.length > 0, [filteredCharacters])
-    const showNoCharactersMessage = useMemo(() => hasCharacters && !hasFilteredCharacters, [hasCharacters, hasFilteredCharacters])
+    const hasFilteredCharacters = useMemo(
+        () => filteredCharacters.length > 0,
+        [filteredCharacters]
+    )
+    const showNoCharactersMessage = useMemo(
+        () => hasCharacters && !hasFilteredCharacters,
+        [hasCharacters, hasFilteredCharacters]
+    )
 
     // we honestly should have a virtual infinite scroll here to improve performance
     // if you have more than ~300 characters, it will start to lag BADLY

@@ -1,4 +1,6 @@
+import { SITE_CONFIG, getToolUrl } from "@/app/config/urls"
 import UnicodeInspector from "@/app/unicode/page.client"
+import logo from "@/assets/logo.png"
 import GraphemeSplitter from "grapheme-splitter"
 import type { Metadata } from "next"
 
@@ -39,10 +41,10 @@ export async function generateMetadata({
                     description: `Inspect ${characterCount} Unicode character${characterCount !== 1 ? "s" : ""} - ${byteSize} bytes.`,
                     images: [
                         {
-                            url: "/assets/logo.png",
-                            width: 1600,
-                            height: 1000,
-                            alt: "tools.morsz.dev logo",
+                            url: logo.src,
+                            width: logo.width,
+                            height: logo.height,
+                            alt: `${SITE_CONFIG.SITE_NAME} logo`,
                         },
                     ],
                 },
@@ -50,7 +52,7 @@ export async function generateMetadata({
                     card: "summary",
                     title: `Unicode Inspector - ${decodedInputTruncated}`,
                     description: `Inspect ${characterCount} Unicode character${characterCount !== 1 ? "s" : ""} - ${byteSize} bytes.`,
-                    images: ["/assets/logo.png"],
+                    images: [logo.src],
                 },
             }
         }
@@ -66,12 +68,12 @@ export async function generateMetadata({
             description:
                 "Inspect Unicode characters, names, code points, categories, blocks, byte sizes, etc.",
             type: "website",
-            url: "https://tools.morsz.dev/unicode",
+            url: getToolUrl(SITE_CONFIG.TOOLS.UNICODE),
             images: [
                 {
-                    url: "/assets/logo.png",
-                    width: 1600,
-                    height: 1000,
+                    url: logo.src,
+                    width: logo.width,
+                    height: logo.height,
                 },
             ],
         },
@@ -80,7 +82,7 @@ export async function generateMetadata({
             title: "Unicode Inspector",
             description:
                 "Inspect Unicode characters, names, code points, categories, blocks, byte sizes, etc.",
-            images: ["/assets/logo.png"],
+            images: [logo.src],
         },
     }
 }
