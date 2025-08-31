@@ -25,6 +25,9 @@ interface VersionIndicatorProps {
     currentCommitHash?: string
     currentCommitMessage?: string
     className?: string
+    // Optional: specify which shared packages this app depends on
+    // If not provided, will auto-detect from package.json
+    dependencies?: string[]
 }
 
 interface CachedCommitData {
@@ -41,6 +44,7 @@ const VersionIndicator = ({
     currentCommitHash,
     currentCommitMessage,
     className = "",
+    dependencies,
 }: VersionIndicatorProps) => {
     const isDevelopment = process.env.NODE_ENV === "development"
 
@@ -74,6 +78,27 @@ const VersionIndicator = ({
         }
     }
 
+    // compute the paths that should trigger updates for this app
+    const getWatchedPaths = (): string[] => {
+        const paths = [`apps/${app}`]
+
+        const sharedPackages = ['ui', 'tailwind-config']
+        sharedPackages.forEach(pkg => {
+            paths.push(`packages/${pkg}`)
+        })
+
+        // add any additional dependencies if explicitly provided
+        if (dependencies) {
+            dependencies.forEach(dep => {
+                if (!sharedPackages.includes(dep)) {
+                    paths.push(`packages/${dep}`)
+                }
+            })
+        }
+
+        return paths
+    }
+
     const [commitInfo, setCommitInfo] = useState<CommitInfo>(() => {
         const cached = getCachedData()
         return {
@@ -88,29 +113,44 @@ const VersionIndicator = ({
     useEffect(() => {
         const fetchLatestCommit = async () => {
             try {
-                // get latest commit from master branch filtered by app path
-                const commitsResponse = await fetch(
-                    `https://api.github.com/repos/${repo}/commits?per_page=1&path=apps/${app}`,
-                    {
-                        headers: {
-                            Accept: "application/vnd.github.v3+json",
-                        },
-                    }
-                )
+                const watchedPaths = getWatchedPaths()
+                let latestCommitHash: string | null = null
+                let latestCommitDate = new Date(0)
 
-                if (commitsResponse.ok) {
-                    const commitsData = await commitsResponse.json()
-                    if (commitsData.length > 0) {
-                        const latestCommitHash = commitsData[0].sha
-                        setCachedData(latestCommitHash)
-                        setCommitInfo(prev => ({
-                            ...prev,
-                            latest: latestCommitHash,
-                            isLatest: latestCommitHash === currentCommitHash,
-                            isLoading: false,
-                        }))
-                        return
+                for (const path of watchedPaths) {
+                    const commitsResponse = await fetch(
+                        `https://api.github.com/repos/${repo}/commits?per_page=1&path=${path}`,
+                        {
+                            headers: {
+                                Accept: "application/vnd.github.v3+json",
+                            },
+                        }
+                    )
+
+                    if (commitsResponse.ok) {
+                        const commitsData = await commitsResponse.json()
+                        if (commitsData.length > 0) {
+                            const commit = commitsData[0]
+                            const commitDate = new Date(commit.commit.committer.date)
+
+                            // what's the most recent commit?
+                            if (commitDate > latestCommitDate) {
+                                latestCommitDate = commitDate
+                                latestCommitHash = commit.sha
+                            }
+                        }
                     }
+                }
+
+                if (latestCommitHash) {
+                    setCachedData(latestCommitHash)
+                    setCommitInfo(prev => ({
+                        ...prev,
+                        latest: latestCommitHash,
+                        isLatest: latestCommitHash === currentCommitHash,
+                        isLoading: false,
+                    }))
+                    return
                 }
 
                 // if the user is offline or something else goes wrong,
@@ -132,7 +172,7 @@ const VersionIndicator = ({
         }
 
         fetchLatestCommit()
-    }, [repo, app, currentCommitHash])
+    }, [repo, app, currentCommitHash, dependencies])
 
     const getStatusIcon = () => {
         if (commitInfo.isLoading) {
@@ -228,7 +268,9 @@ const VersionIndicator = ({
                                 {isDevelopment ? (
                                     <div className="h-3 w-3 rounded-full bg-purple-500 animate-pulse" />
                                 ) : (
-                                    getStatusIcon()
+                                    <div className="font-bold">
+                                        {getStatusIcon()}
+                                    </div>
                                 )}
                                 <span className="text-xs text-muted-foreground font-mono">
                                     {isDevelopment
