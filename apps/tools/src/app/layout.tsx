@@ -62,11 +62,20 @@ export const metadata: Metadata = {
         title: "tools.morsz.dev",
         description:
             "a collection of web based tools i built for myself or friends.",
+        images: [
+            {
+                url: "/assets/logo.png",
+                width: 1600,
+                height: 1000,
+                alt: "tools.morsz.dev logo",
+            },
+        ],
     },
     twitter: {
-        card: "summary_large_image",
+        card: "summary",
         title: "tools.morsz.dev",
         description:
             "a collection of web based tools i built for myself or friends.",
+        images: ["/assets/logo.png"],
     },
 }

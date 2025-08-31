@@ -1,4 +1,4 @@
-import Logo from "@morsz/ui/special/logo"
+import Logo from "@morsz/ui/special/tools-logo"
 import ToolCard, { ToolCardProps } from "@morsz/ui/special/tool-card"
 import { obviously } from "@morsz/ui/styles/fonts"
 import {

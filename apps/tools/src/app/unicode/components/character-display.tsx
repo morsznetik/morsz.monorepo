@@ -11,7 +11,7 @@ interface CharacterDisplayProps {
     fontFamily: string
 }
 
-const CharacterDisplay = ({
+const CharacterDisplay = React.memo(({
     char,
     compactView,
     onCopy,
@@ -85,6 +85,8 @@ const CharacterDisplay = ({
             />
         </div>
     )
-}
+})
+
+CharacterDisplay.displayName = "CharacterDisplay"
 
 export default CharacterDisplay

@@ -10,11 +10,20 @@ export const metadata: Metadata = {
         description: "check a password's strength using data from HiveSystems.",
         type: "website",
         url: "https://tools.morsz.dev/password-checker",
+        images: [
+            {
+                url: "/assets/logo.png",
+                width: 1600,
+                height: 1000,
+                alt: "tools.morsz.dev logo",
+            },
+        ],
     },
     twitter: {
-        card: "summary_large_image",
+        card: "summary",
         title: "Password Strength Checker",
         description: "check a password's strength using data from HiveSystems.",
+        images: ["/assets/logo.png"],
     },
 }
 

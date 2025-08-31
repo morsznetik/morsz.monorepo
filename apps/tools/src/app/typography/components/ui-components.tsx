@@ -12,7 +12,7 @@ import {
 import { Input } from "@morsz/ui/input"
 import { Separator } from "@morsz/ui/separator"
 import { Skeleton } from "@morsz/ui/skeleton"
-import Logo from "@morsz/ui/special/logo"
+import Logo from "@morsz/ui/special/tools-logo"
 import { NavbarButton } from "@morsz/ui/special/navbar"
 import { TextShimmerWave } from "@morsz/ui/text-shimmer-wave"
 import { Home } from "lucide-react"

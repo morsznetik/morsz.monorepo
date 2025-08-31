@@ -37,10 +37,20 @@ export async function generateMetadata({
                 openGraph: {
                     title: `Unicode Inspector - ${decodedInputTruncated}`,
                     description: `Inspect ${characterCount} Unicode character${characterCount !== 1 ? "s" : ""} - ${byteSize} bytes.`,
+                    images: [
+                        {
+                            url: "/assets/logo.png",
+                            width: 1600,
+                            height: 1000,
+                            alt: "tools.morsz.dev logo",
+                        },
+                    ],
                 },
                 twitter: {
+                    card: "summary",
                     title: `Unicode Inspector - ${decodedInputTruncated}`,
                     description: `Inspect ${characterCount} Unicode character${characterCount !== 1 ? "s" : ""} - ${byteSize} bytes.`,
+                    images: ["/assets/logo.png"],
                 },
             }
         }
@@ -57,11 +67,20 @@ export async function generateMetadata({
                 "Inspect Unicode characters, names, code points, categories, blocks, byte sizes, etc.",
             type: "website",
             url: "https://tools.morsz.dev/unicode",
+            images: [
+                {
+                    url: "/assets/logo.png",
+                    width: 1600,
+                    height: 1000,
+                },
+            ],
         },
         twitter: {
+            card: "summary",
             title: "Unicode Inspector",
             description:
                 "Inspect Unicode characters, names, code points, categories, blocks, byte sizes, etc.",
+            images: ["/assets/logo.png"],
         },
     }
 }

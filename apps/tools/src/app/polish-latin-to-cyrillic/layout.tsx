@@ -10,11 +10,20 @@ export const metadata: Metadata = {
         description: "convert polish latin to cyrillic",
         type: "website",
         url: "https://tools.morsz.dev/polish-latin-to-cyrillic",
+        images: [
+            {
+                url: "/assets/logo.png",
+                width: 1600,
+                height: 1000,
+                alt: "tools.morsz.dev logo",
+            },
+        ],
     },
     twitter: {
-        card: "summary_large_image",
+        card: "summary",
         title: "Polish Latin to Cyrillic",
         description: "convert polish latin to cyrillic",
+        images: ["/assets/logo.png"],
     },
 }
 

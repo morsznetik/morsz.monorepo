@@ -210,7 +210,7 @@ const UnicodeInspector = () => {
     }, [customFont])
 
     // toggle group options for view mode
-    const viewModeOptions = [
+    const viewModeOptions = useMemo(() => [
         {
             value: "detailed",
             label: (
@@ -229,10 +229,10 @@ const UnicodeInspector = () => {
                 </span>
             ),
         },
-    ]
+    ], [])
 
     // toggle group options for character mode
-    const characterModeOptions = [
+    const characterModeOptions = useMemo(() => [
         {
             value: "individual",
             label: (
@@ -251,7 +251,7 @@ const UnicodeInspector = () => {
                 </span>
             ),
         },
-    ]
+    ], [])
 
     const getCharacterName = useCallback(
         (input: number | string): string | null => {
@@ -287,6 +287,7 @@ const UnicodeInspector = () => {
     useEffect(() => {
         if (!input) {
             setCharacters([])
+            setShowRgiWarning(false)
             return
         }
 
@@ -298,72 +299,73 @@ const UnicodeInspector = () => {
                 units = Array.from(input)
             }
 
-            const chars = units
-                .map(char => {
-                    if (!char) return null
+            const chars: CharacterInfo[] = []
+            let hasEmoji = false
 
-                    const codePoint = char.codePointAt(0) || 0
-                    const byteSize = new TextEncoder().encode(char).length
+            for (const char of units) {
+                if (!char) continue
 
+                const codePoint = char.codePointAt(0) || 0
+                const byteSize = new TextEncoder().encode(char).length
+
+                const charInfo: CharacterInfo = {
+                    char,
+                    codePoint,
+                    hexCodePoint: `U+${codePoint.toString(16).toUpperCase().padStart(4, "0")}`,
+                    name: null,
+                    category: null,
+                    block: null,
+                    byteSize,
+                    isEmoji: false,
+                }
+
+                // if we are grouping by grapheme, we need to get all the code points
+                if (groupMode && char.length > 1) {
                     const allCodePoints: number[] = []
                     const allHexCodePoints: string[] = []
-                    let categoryInfo = null
-                    let blockInfo = null
 
-                    // if we are grouping by grapheme, we need to get all the code points
-                    if (groupMode && char.length > 1) {
-                        for (let i = 0; i < char.length; i++) {
-                            const cp = char.codePointAt(i)
-                            if (cp !== undefined) {
-                                // if we are in a surrogate pair, we need to skip it
-                                if (
-                                    i > 0 &&
-                                    0xd800 <= char.charCodeAt(i - 1) &&
-                                    char.charCodeAt(i - 1) <= 0xdbff &&
-                                    0xdc00 <= char.charCodeAt(i) &&
-                                    char.charCodeAt(i) <= 0xdfff
-                                ) {
-                                    continue
-                                }
-                                allCodePoints.push(cp)
-                                allHexCodePoints.push(
-                                    `U+${cp.toString(16).toUpperCase().padStart(4, "0")}`
-                                )
+                    for (let i = 0; i < char.length; i++) {
+                        const cp = char.codePointAt(i)
+                        if (cp !== undefined) {
+                            // if we are in a surrogate pair, we need to skip it
+                            if (
+                                i > 0 &&
+                                0xd800 <= char.charCodeAt(i - 1) &&
+                                char.charCodeAt(i - 1) <= 0xdbff &&
+                                0xdc00 <= char.charCodeAt(i) &&
+                                char.charCodeAt(i) <= 0xdfff
+                            ) {
+                                continue
                             }
+                            allCodePoints.push(cp)
+                            allHexCodePoints.push(
+                                `U+${cp.toString(16).toUpperCase().padStart(4, "0")}`
+                            )
                         }
-                        categoryInfo = null
-                        blockInfo = null
-                    } else {
-                        // otherwise, we can get the category and block
-                        categoryInfo = getUnicodeCategory(codePoint)
-                        blockInfo = getUnicodeBlock(codePoint)
                     }
 
-                    return {
-                        char,
-                        codePoint,
-                        hexCodePoint: `U+${codePoint.toString(16).toUpperCase().padStart(4, "0")}`,
-                        name: groupMode
-                            ? getCharacterName(char)
-                            : getCharacterName(codePoint),
-                        category: categoryInfo,
-                        block: blockInfo,
-                        byteSize,
-                        allCodePoints:
-                            allCodePoints.length > 0
-                                ? allCodePoints
-                                : undefined,
-                        allHexCodePoints:
-                            allHexCodePoints.length > 0
-                                ? allHexCodePoints
-                                : undefined,
-                        isEmoji: isEmojiCharacter(char),
-                    }
-                })
-                .filter(Boolean) as CharacterInfo[]
+                    charInfo.allCodePoints = allCodePoints.length > 0 ? allCodePoints : undefined
+                    charInfo.allHexCodePoints = allHexCodePoints.length > 0 ? allHexCodePoints : undefined
+                    charInfo.category = null
+                    charInfo.block = null
+                    charInfo.name = getCharacterName(char)
+                } else {
+                    // otherwise, we can get the category and block
+                    charInfo.category = getUnicodeCategory(codePoint)
+                    charInfo.block = getUnicodeBlock(codePoint)
+                    charInfo.name = getCharacterName(codePoint)
+                }
+
+                charInfo.isEmoji = isEmojiCharacter(char)
+                if (charInfo.isEmoji) {
+                    hasEmoji = true
+                }
+
+                chars.push(charInfo)
+            }
 
             setCharacters(chars)
-            setShowRgiWarning(chars.some(c => c.isEmoji))
+            setShowRgiWarning(hasEmoji)
         } catch (error) {
             console.error("Error processing input:", error)
             setCharacters([])
@@ -493,35 +495,37 @@ const UnicodeInspector = () => {
         setInput(prev => prev + char)
     }, [])
 
-    const filteredCharacters = !searchFilter
-        ? characters
-        : characters.filter(charInfo => {
-              if (!charInfo) return false
-              const normalizedFilter = searchFilter.toLowerCase().trim()
-              const plainName = charInfo.name
-                  ? charInfo.name.replace(/<[^>]*>/g, "")
-                  : ""
-              return (
-                  charInfo.char.toLowerCase().includes(normalizedFilter) ||
-                  charInfo.hexCodePoint
-                      .toLowerCase()
-                      .includes(normalizedFilter) ||
-                  (plainName &&
-                      plainName.toLowerCase().includes(normalizedFilter)) ||
-                  (charInfo.category &&
-                      charInfo.category
-                          .toLowerCase()
-                          .includes(normalizedFilter)) ||
-                  (charInfo.block &&
-                      charInfo.block.toLowerCase().includes(normalizedFilter))
-              )
-          })
+    const filteredCharacters = useMemo(() => {
+        if (!searchFilter) return characters
 
-    const inputByteSize = input ? new TextEncoder().encode(input).length : 0
+        const normalizedFilter = searchFilter.toLowerCase().trim()
+        return characters.filter(charInfo => {
+            if (!charInfo) return false
+            const plainName = charInfo.name
+                ? charInfo.name.replace(/<[^>]*>/g, "")
+                : ""
+            return (
+                charInfo.char.toLowerCase().includes(normalizedFilter) ||
+                charInfo.hexCodePoint
+                    .toLowerCase()
+                    .includes(normalizedFilter) ||
+                (plainName &&
+                    plainName.toLowerCase().includes(normalizedFilter)) ||
+                (charInfo.category &&
+                    charInfo.category
+                        .toLowerCase()
+                        .includes(normalizedFilter)) ||
+                (charInfo.block &&
+                    charInfo.block.toLowerCase().includes(normalizedFilter))
+            )
+        })
+    }, [characters, searchFilter])
 
-    const hasCharacters = characters.length > 0
-    const hasFilteredCharacters = filteredCharacters.length > 0
-    const showNoCharactersMessage = hasCharacters && !hasFilteredCharacters
+    const inputByteSize = useMemo(() => input ? new TextEncoder().encode(input).length : 0, [input])
+
+    const hasCharacters = useMemo(() => characters.length > 0, [characters])
+    const hasFilteredCharacters = useMemo(() => filteredCharacters.length > 0, [filteredCharacters])
+    const showNoCharactersMessage = useMemo(() => hasCharacters && !hasFilteredCharacters, [hasCharacters, hasFilteredCharacters])
 
     // we honestly should have a virtual infinite scroll here to improve performance
     // if you have more than ~300 characters, it will start to lag BADLY
@@ -736,7 +740,7 @@ const UnicodeInspector = () => {
                             >
                                 {filteredCharacters.map((charInfo, index) => (
                                     <CharacterCard
-                                        key={`${charInfo.codePoint}-${index}`}
+                                        key={`${charInfo.char}-${charInfo.codePoint}-${index}`}
                                         charInfo={charInfo}
                                         index={index}
                                         compactView={compactView}

@@ -24,7 +24,7 @@ interface CharacterCardProps {
     fontFamily: string
 }
 
-const CharacterCard = ({
+const CharacterCard = React.memo(({
     charInfo,
     index,
     compactView,
@@ -387,6 +387,8 @@ const CharacterCard = ({
             )}
         </Card>
     )
-}
+})
+
+CharacterCard.displayName = "CharacterCard"
 
 export default CharacterCard
