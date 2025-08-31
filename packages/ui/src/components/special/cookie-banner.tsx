@@ -69,7 +69,7 @@ const UICookieBanner = ({
                 }
             }
         } catch {
-            // ignore localStorage errors
+            // silently
         }
     }, [storageKey, consentVersion])
 
@@ -82,7 +82,7 @@ const UICookieBanner = ({
             }
             localStorage.setItem(storageKey, JSON.stringify(record))
         } catch {
-            // same here as above
+            // silently
         }
         setDismissed(true)
     }, [storageKey, consentVersion])
@@ -96,7 +96,7 @@ const UICookieBanner = ({
             }
             localStorage.setItem(storageKey, JSON.stringify(record))
         } catch {
-            // Ignore localStorage errors (e.g., in private browsing mode)
+            // silently
         }
         setDismissed(true)
     }, [storageKey, consentVersion])

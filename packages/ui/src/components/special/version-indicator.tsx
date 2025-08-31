@@ -21,12 +21,10 @@ interface CommitInfo {
 
 interface VersionIndicatorProps {
     repo: string
-    app: string // Required - which app to target (e.g., "tools")
+    app: string
     currentCommitHash?: string
     currentCommitMessage?: string
     className?: string
-    // Optional: specify which shared packages this app depends on
-    // If not provided, will auto-detect from package.json
     dependencies?: string[]
 }
 
@@ -36,7 +34,7 @@ interface CachedCommitData {
     app: string
 }
 
-const CACHE_KEY = 'commit-cache'
+const CACHE_KEY = "commit_cache"
 
 const VersionIndicator = ({
     repo = "morsznetik/morsz.monorepo",
@@ -49,7 +47,7 @@ const VersionIndicator = ({
     const isDevelopment = process.env.NODE_ENV === "development"
 
     const getCachedData = (): CachedCommitData | null => {
-        if (typeof window === 'undefined') return null
+        if (typeof window === "undefined") return null
         try {
             const cached = localStorage.getItem(CACHE_KEY)
             if (!cached) return null
@@ -65,7 +63,7 @@ const VersionIndicator = ({
     }
 
     const setCachedData = (commitHash: string) => {
-        if (typeof window === 'undefined') return
+        if (typeof window === "undefined") return
         try {
             const data: CachedCommitData = {
                 commitHash,
@@ -82,7 +80,7 @@ const VersionIndicator = ({
     const getWatchedPaths = (): string[] => {
         const paths = [`apps/${app}`]
 
-        const sharedPackages = ['ui', 'tailwind-config']
+        const sharedPackages = ["ui", "tailwind-config"]
         sharedPackages.forEach(pkg => {
             paths.push(`packages/${pkg}`)
         })
@@ -104,7 +102,7 @@ const VersionIndicator = ({
         return {
             current: currentCommitHash ?? "unknown",
             latest: cached?.commitHash ?? null,
-            isLatest: cached ? (cached.commitHash === currentCommitHash) : true,
+            isLatest: cached ? cached.commitHash === currentCommitHash : true,
             isLoading: cached ? false : true,
             error: null,
         }
@@ -131,7 +129,9 @@ const VersionIndicator = ({
                         const commitsData = await commitsResponse.json()
                         if (commitsData.length > 0) {
                             const commit = commitsData[0]
-                            const commitDate = new Date(commit.commit.committer.date)
+                            const commitDate = new Date(
+                                commit.commit.committer.date
+                            )
 
                             // what's the most recent commit?
                             if (commitDate > latestCommitDate) {
@@ -233,16 +233,24 @@ const VersionIndicator = ({
                     </div>
                     {!isLatest && (
                         <div className="flex justify-between">
-                            <span className="text-muted-foreground">Latest:</span>
-                            <span className="font-mono">{commitInfo.latest?.slice(0, 7)}</span>
+                            <span className="text-muted-foreground">
+                                Latest:
+                            </span>
+                            <span className="font-mono">
+                                {commitInfo.latest?.slice(0, 7)}
+                            </span>
                         </div>
                     )}
                 </div>
 
                 {currentCommitMessage && (
                     <div className="pt-2 border-t border-border/50">
-                        <div className="text-xs text-muted-foreground mb-1">Commit message:</div>
-                        <div className="text-xs italic">"{currentCommitMessage}"</div>
+                        <div className="text-xs text-muted-foreground mb-1">
+                            Commit message:
+                        </div>
+                        <div className="text-xs italic">
+                            "{currentCommitMessage}"
+                        </div>
                     </div>
                 )}
             </div>
