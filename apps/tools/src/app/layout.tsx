@@ -36,7 +36,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://tools.morsz.dev"),
+    // change it later
+    metadataBase: new URL("https://morsz-monorepo-tools.vercel.app/"),
     title: {
         absolute: "tools.morsz.dev",
         template: "%s | tools.morsz.dev",
