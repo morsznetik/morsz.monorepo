@@ -10,6 +10,11 @@
         sans-serif;
 }
 
+.font-zxproto {
+    font-family: var(--font-zxproto), monospace;
+    text-rendering: optimizeLegibility;
+}
+
 .font-gnu-unifont {
     font-family: var(--font-gnu-unifont), monospace;
     text-rendering: optimizeLegibility;
@@ -22,5 +27,10 @@
 
 .font-gg-sans {
     font-family: var(--font-ggsans), sans-serif;
+    text-rendering: optimizeLegibility;
+}
+
+.font-custom {
+    font-family: "CustomFont", sans-serif;
     text-rendering: optimizeLegibility;
 }

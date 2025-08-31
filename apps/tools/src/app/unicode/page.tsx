@@ -1,6 +1,6 @@
 import UnicodeInspector from "@/app/unicode/page.client"
-import type { Metadata } from "next"
 import GraphemeSplitter from "grapheme-splitter"
+import type { Metadata } from "next"
 
 export async function generateMetadata({
     searchParams,
@@ -24,7 +24,7 @@ export async function generateMetadata({
             const graphemeSplitter = new GraphemeSplitter()
             const graphemes = graphemeSplitter.splitGraphemes(decodedInput)
             const characterCount = graphemes.length
-            
+
             const decodedInputTruncated =
                 graphemes.length > 8
                     ? graphemes.slice(0, 8).join("") + "..."

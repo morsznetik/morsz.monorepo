@@ -5,7 +5,7 @@ import UICookieBanner from "@morsz/ui/special/cookie-banner"
 import Navbar from "@morsz/ui/special/navbar"
 import ThemeScriptHack from "@morsz/ui/special/theme-script"
 import "@morsz/ui/styles"
-import { zxProto } from "@morsz/ui/styles/fonts"
+import { ggSans, gnuUnifont, notoSans, zxProto } from "@morsz/ui/styles/fonts"
 import type { Metadata, Viewport } from "next"
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
@@ -15,7 +15,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                 <ThemeScriptHack />
             </head>
             <body
-                className={`transition-colors transition-discrete ${zxProto.className}`}
+                className={`transition-colors transition-discrete ${zxProto.className} ${gnuUnifont.variable} ${ggSans.variable} ${notoSans.variable}`}
             >
                 <Providers>
                     <Navbar />

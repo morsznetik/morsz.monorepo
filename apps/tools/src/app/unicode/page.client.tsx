@@ -18,6 +18,7 @@ import { Badge } from "@morsz/ui/badge"
 import { Button } from "@morsz/ui/button"
 import { Card, CardContent } from "@morsz/ui/card"
 import { Input } from "@morsz/ui/input"
+import { ggSans, gnuUnifont, notoSans, zxProto } from "@morsz/ui/styles/fonts"
 import "@morsz/ui/styles/unicode-fonts"
 import { Textarea } from "@morsz/ui/textarea"
 import GraphemeSplitter from "grapheme-splitter"
@@ -53,7 +54,6 @@ const URLSyncHandler = ({
     onInitialInput: (input: string) => void
     input: string
 }) => {
-    const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
@@ -95,9 +95,8 @@ const URLSyncHandler = ({
                 onInitialInput(decodedInput)
             }
         } catch {
-            // Handle error silently
+            // silently
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // sync input to URL as hex code points without pushing history
@@ -105,13 +104,13 @@ const URLSyncHandler = ({
         try {
             const hex = encodeToHexParam(input)
             const newUrl = hex ? `${pathname}?hex=${hex}` : pathname
-            router.replace(newUrl, { scroll: false })
+            window.history.replaceState({}, "", newUrl)
         } catch {
-            // Handle error silently
+            // silently
         }
-    }, [input, pathname, router, encodeToHexParam, decodeFromHexParam])
+    }, [input, pathname, encodeToHexParam, decodeFromHexParam])
 
-    return null // This component doesn't render anything
+    return null
 }
 
 const UnicodeInspector = () => {
@@ -121,7 +120,7 @@ const UnicodeInspector = () => {
     const [groupMode, setGroupMode] = useState<boolean>(false)
     const [searchFilter, setSearchFilter] = useState<string>("")
     const [compactView, setCompactView] = useState<boolean>(false)
-    const [selectedFont, setSelectedFont] = useState<string>("font-default")
+    const [selectedFont, setSelectedFont] = useState<string>(zxProto.className)
     const [showRgiWarning, setShowRgiWarning] = useState<boolean>(false)
     const [customFont, setCustomFont] = useState<string | null>(null)
     const [customFontName, setCustomFontName] = useState<string>("Custom Font")
@@ -137,22 +136,36 @@ const UnicodeInspector = () => {
                 label: <span className="inline font-system">System</span>,
             },
             {
-                value: "font-default",
-                label: <span className="inline">0xProto</span>,
-            },
-            {
-                value: "font-gnu-unifont",
+                value: zxProto.className,
                 label: (
-                    <span className="inline font-gnu-unifont">GNU Unifont</span>
+                    <span className={`inline ${zxProto.className}`}>
+                        0xProto
+                    </span>
                 ),
             },
             {
-                value: "font-noto-sans",
-                label: <span className="inline font-noto-sans">Noto Sans</span>,
+                value: gnuUnifont.className,
+                label: (
+                    <span className={`inline ${gnuUnifont.className}`}>
+                        GNU Unifont
+                    </span>
+                ),
             },
             {
-                value: "font-gg-sans",
-                label: <span className="inline font-gg-sans">ggSans</span>,
+                value: notoSans.className,
+                label: (
+                    <span className={`inline ${notoSans.className}`}>
+                        Noto Sans
+                    </span>
+                ),
+            },
+            {
+                value: ggSans.className,
+                label: (
+                    <span className={`inline ${ggSans.className}`}>
+                        ggSans {/* the discord font */}
+                    </span>
+                ),
             },
         ]
 
@@ -190,14 +203,9 @@ const UnicodeInspector = () => {
 
         const font = new FontFace("CustomFont", `url(${customFont})`)
         document.fonts.add(font)
-
-        font.load().then(() => {
-            document.body.classList.add("font-custom")
-        })
-
+        
         return () => {
             document.fonts.delete(font)
-            document.body.classList.remove("font-custom")
         }
     }, [customFont])
 
@@ -616,7 +624,7 @@ const UnicodeInspector = () => {
                             <Textarea
                                 value={input}
                                 onChange={handleInputChange}
-                                className="resize-none h-32 sm:h-40 md:h-48 text-base"
+                                className={`resize-none h-32 sm:h-40 md:h-48 text-base ${selectedFont}`}
                                 placeholder="Paste text with Unicode characters to inspect..."
                             />
                             {input && (
