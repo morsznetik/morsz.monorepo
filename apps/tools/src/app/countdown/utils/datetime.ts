@@ -18,6 +18,7 @@ export interface CountdownData {
         timezone: string
     }
     timezone: string
+    title?: string
     initialIsExpired: boolean
     initialTimeLeft?: TimeData
     initialTimePassed?: TimeData

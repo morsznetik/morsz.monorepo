@@ -155,7 +155,10 @@ function Calendar({
                     className,
                     orientation,
                     ...props
-                }: { className?: string; orientation?: string } & React.SVGProps<SVGSVGElement>) => {
+                }: {
+                    className?: string
+                    orientation?: string
+                } & React.SVGProps<SVGSVGElement>) => {
                     if (orientation === "left") {
                         return (
                             <ChevronLeftIcon

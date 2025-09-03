@@ -260,24 +260,25 @@ const VersionIndicator = ({
                         <span className="text-muted-foreground">Current:</span>
                         <span className="font-mono">{commitHash}</span>
                     </div>
-                                    {!isLatest && (
-                    <div className="flex justify-between">
-                        <span className="text-muted-foreground">
-                            Latest:
-                        </span>
-                        <span className="font-mono">
-                            {commitInfo.latest?.slice(0, 7)}
-                        </span>
-                    </div>
-                )}
-                
-                {!isLatest && (
-                    <div className="pt-2 border-t border-border/50">
-                        <div className="text-xs text-muted-foreground">
-                            If refresh doesn't update, the latest build may be failing.
+                    {!isLatest && (
+                        <div className="flex justify-between">
+                            <span className="text-muted-foreground">
+                                Latest:
+                            </span>
+                            <span className="font-mono">
+                                {commitInfo.latest?.slice(0, 7)}
+                            </span>
                         </div>
-                    </div>
-                )}
+                    )}
+
+                    {!isLatest && (
+                        <div className="pt-2 border-t border-border/50">
+                            <div className="text-xs text-muted-foreground">
+                                If refresh doesn&apos;t update, the latest build
+                                may be failing.
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {currentCommitMessage && (

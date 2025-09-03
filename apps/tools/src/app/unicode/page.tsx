@@ -1,4 +1,5 @@
-import { SITE_CONFIG, getToolUrl } from "@/app/config/urls"
+import { createToolMetadata } from "@/app/config/metadata"
+import { SITE_CONFIG } from "@/app/config/urls"
 import UnicodeInspector from "@/app/unicode/page.client"
 import GraphemeSplitter from "grapheme-splitter"
 import type { Metadata } from "next"
@@ -32,58 +33,24 @@ export async function generateMetadata({
                     : decodedInput
             const byteSize = new TextEncoder().encode(decodedInput).length
 
-            return {
-                title: `Unicode Inspector`,
-                description: `Inspect ${characterCount} Unicode character${characterCount !== 1 ? "s" : ""} - ${byteSize} bytes.`,
-                openGraph: {
+            return createToolMetadata(
+                "Unicode Inspector",
+                `Inspect ${characterCount} Unicode character${characterCount !== 1 ? "s" : ""} - ${byteSize} bytes.`,
+                SITE_CONFIG.TOOLS.UNICODE,
+                {
                     title: `Unicode Inspector - ${decodedInputTruncated}`,
                     description: `Inspect ${characterCount} Unicode character${characterCount !== 1 ? "s" : ""} - ${byteSize} bytes.`,
-                    images: [
-                        {
-                            url: SITE_CONFIG.LOGO.src,
-                            width: SITE_CONFIG.LOGO.width,
-                            height: SITE_CONFIG.LOGO.height,
-                            alt: SITE_CONFIG.LOGO.alt,
-                        },
-                    ],
-                },
-                twitter: {
-                    card: "summary",
-                    title: `Unicode Inspector - ${decodedInputTruncated}`,
-                    description: `Inspect ${characterCount} Unicode character${characterCount !== 1 ? "s" : ""} - ${byteSize} bytes.`,
-                    images: [SITE_CONFIG.LOGO.src],
-                },
-            }
+                }
+            )
         }
     }
 
     // default
-    return {
-        title: "Unicode Inspector",
-        description:
-            "Inspect Unicode characters, names, code points, categories, blocks, byte sizes, etc.",
-        openGraph: {
-            title: "Unicode Inspector",
-            description:
-                "Inspect Unicode characters, names, code points, categories, blocks, byte sizes, etc.",
-            type: "website",
-            url: getToolUrl(SITE_CONFIG.TOOLS.UNICODE),
-            images: [
-                {
-                    url: SITE_CONFIG.LOGO.src,
-                    width: SITE_CONFIG.LOGO.width,
-                    height: SITE_CONFIG.LOGO.height,
-                },
-            ],
-        },
-        twitter: {
-            card: "summary",
-            title: "Unicode Inspector",
-            description:
-                "Inspect Unicode characters, names, code points, categories, blocks, byte sizes, etc.",
-            images: [SITE_CONFIG.LOGO.src],
-        },
-    }
+    return createToolMetadata(
+        "Unicode Inspector",
+        "Inspect Unicode characters, names, code points, categories, blocks, byte sizes, etc.",
+        SITE_CONFIG.TOOLS.UNICODE
+    )
 }
 
 export default UnicodeInspector

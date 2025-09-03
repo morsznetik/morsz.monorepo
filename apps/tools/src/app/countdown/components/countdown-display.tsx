@@ -51,11 +51,13 @@ type CountdownDataSource =
           targetDate: string
           targetTime: string
           timezone: string
+          title?: string
       }
     | {
           type: "token"
           targetDateTime: { iso: string; timezone: string }
           timezone: string
+          title?: string
           initialTimeLeft?: TimeData
           initialTimePassed?: TimeData
           initialIsExpired: boolean
@@ -98,14 +100,8 @@ const TimeUnit = ({
     isActive = true,
     textSize = "text-3xl",
 }: TimeUnitProps) => {
-    const [isHydrated, setIsHydrated] = useState(false)
-
-    useEffect(() => {
-        setIsHydrated(true)
-    }, [])
-
     const getDisplayValue = () => {
-        if (label === "Days" && isHydrated) {
+        if (label === "Days") {
             return formatShortenedNumber(value)
         }
 
@@ -302,7 +298,7 @@ const CountdownDisplay = memo(
                         <CardHeader className="text-center">
                             <CardTitle className="flex items-center justify-center gap-3 text-xl font-bold">
                                 <Clock className="h-6 w-6 text-primary" />
-                                Preview
+                                {data.title || "Preview"}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="p-8 pt-2 pb-2 flex-1 flex flex-col">
@@ -350,7 +346,7 @@ const CountdownDisplay = memo(
                             <CardHeader className="text-center">
                                 <CardTitle className="flex items-center justify-center gap-3 text-xl sm:text-2xl font-bold">
                                     <Clock className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
-                                    Countdown
+                                    {data.title || "Countdown"}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-4 sm:p-8 md:p-12">
@@ -399,7 +395,6 @@ const CountdownDisplay = memo(
         )
     }
 )
-
 
 // its memoized so it loses the display name we have to set it manually
 CountdownDisplay.displayName = "CountdownDisplay"

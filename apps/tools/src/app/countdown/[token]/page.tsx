@@ -1,3 +1,5 @@
+import { createToolMetadata } from "@/app/config/metadata"
+import { SITE_CONFIG } from "@/app/config/urls"
 import CountdownDisplay from "@/app/countdown/components/countdown-display"
 import { decodeToken } from "@/app/countdown/utils/base62"
 import {
@@ -7,16 +9,55 @@ import {
 } from "@/app/countdown/utils/datetime"
 import { CountdownData } from "@/app/countdown/utils/datetime"
 import { Card, CardContent, CardHeader, CardTitle } from "@morsz/ui/card"
+import type { Metadata } from "next"
 
 import { memo } from "react"
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ token: string }>
+}): Promise<Metadata> {
+    const { token } = await params
+
+    try {
+        const { timestamp, timezoneOffset, title } = decodeToken(token)
+        const targetDateTime = fromUTCTimestampAndOffset(
+            Number(timestamp),
+            timezoneOffset
+        )
+        const timezone = getTimezonesFromOffset(timezoneOffset)
+
+        const formattedDate = targetDateTime
+            .setZone(timezone)
+            .toFormat("MMM d, yyyy 'at' h:mm a")
+        const countdownTitle = title || "Countdown Timer"
+
+        return createToolMetadata(
+            countdownTitle,
+            `Countdown to ${formattedDate} (${timezone})`,
+            SITE_CONFIG.TOOLS.COUNTDOWN,
+            {
+                title: `${countdownTitle} - ${formattedDate}`,
+                description: `Live countdown timer to ${formattedDate} (${timezone})`,
+            }
+        )
+    } catch {
+        return createToolMetadata(
+            "Countdown Timer",
+            "Live countdown timer",
+            SITE_CONFIG.TOOLS.COUNTDOWN
+        )
+    }
+}
 
 function calculateInitialCountdownState(
     token: string
 ): CountdownData | { error: string } {
     try {
-        const { timestamp, timezoneOffset } = decodeToken(token)
+        const { timestamp, timezoneOffset, title } = decodeToken(token)
         const targetDateTime = fromUTCTimestampAndOffset(
-            timestamp,
+            Number(timestamp),
             timezoneOffset
         )
 
@@ -30,6 +71,7 @@ function calculateInitialCountdownState(
                 timezone: timezone,
             },
             timezone,
+            title,
             initialIsExpired,
             initialTimeLeft: initialTimeLeft || undefined,
             initialTimePassed: initialTimePassed || undefined,
@@ -67,6 +109,7 @@ const CountdownDisplayPage = memo(
                     type: "token",
                     targetDateTime: result.targetDateTime,
                     timezone: result.timezone,
+                    title: result.title,
                     initialIsExpired: result.initialIsExpired,
                     initialTimeLeft: result.initialTimeLeft || undefined,
                     initialTimePassed: result.initialTimePassed || undefined,
@@ -76,7 +119,6 @@ const CountdownDisplayPage = memo(
         )
     }
 )
-
 
 // its memoized so it loses the display name we have to set it manually
 CountdownDisplayPage.displayName = "CountdownDisplayPage"

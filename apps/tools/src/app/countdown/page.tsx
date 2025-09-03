@@ -3,10 +3,7 @@
 import { SITE_CONFIG, getToolUrl } from "@/app/config/urls"
 import CountdownDisplay from "@/app/countdown/components/countdown-display"
 import { encodeToken } from "@/app/countdown/utils/base62"
-import {
-    parseDateTime,
-    toUTCTimestamp,
-} from "@/app/countdown/utils/datetime"
+import { parseDateTime, toUTCTimestamp } from "@/app/countdown/utils/datetime"
 import {
     getUTCTimezones,
     getUniqueTimezones,
@@ -38,6 +35,7 @@ const Countdown = () => {
     const [targetTime, setTargetTime] = useState(() =>
         DateTime.utc().toFormat("HH:mm")
     )
+    const [title, setTitle] = useState("")
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(
         undefined
     )
@@ -122,7 +120,11 @@ const Countdown = () => {
             const utcTimestamp = toUTCTimestamp(dt)
             const tzOffset = dt.offset // minutes
 
-            const token = encodeToken(utcTimestamp, tzOffset)
+            const token = encodeToken(
+                utcTimestamp,
+                tzOffset,
+                title.trim() || undefined
+            )
 
             setGeneratedToken(token)
             setError("")
@@ -261,6 +263,18 @@ const Countdown = () => {
                             </Select>
                         </div>
 
+                        <div className="space-y-2">
+                            <Label htmlFor="title">Title</Label>
+                            <Input
+                                type="text"
+                                id="title"
+                                placeholder="optional"
+                                value={title}
+                                onChange={e => setTitle(e.target.value)}
+                                maxLength={50}
+                            />
+                        </div>
+
                         <Button
                             onClick={generateCountdownLink}
                             className="w-full"
@@ -295,6 +309,7 @@ const Countdown = () => {
                             targetDate,
                             targetTime,
                             timezone,
+                            title,
                         }}
                         className="w-full"
                     />

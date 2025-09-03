@@ -1,7 +1,7 @@
+import { SITE_CONFIG } from "@/app/config/urls"
 import ToolCard, { ToolCardProps } from "@morsz/ui/special/tool-card"
 import Logo from "@morsz/ui/special/tools-logo"
 import { obviously } from "@morsz/ui/styles/fonts"
-import { SITE_CONFIG } from "@/app/config/urls"
 import {
     Clock,
     CodeXml,
