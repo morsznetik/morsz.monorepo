@@ -7,6 +7,20 @@ import Logo from "./tools-logo"
 import { Home, Settings } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 
+export interface SidebarItem {
+    id: string
+    icon: React.ReactNode
+    label: string
+    href?: string
+    onClick?: () => void
+    priority?: number // for ordering
+    section?: "upper" | "lower"
+}
+
+interface NavbarProps {
+    sidebarItems?: SidebarItem[]
+}
+
 interface NavbarButtonProps extends React.ComponentProps<typeof Button> {
     icon: React.ReactNode
     label: string
@@ -55,39 +69,57 @@ export const NavbarButton = ({
 }
 
 // TODO: add a toggle button to hide the sidebar
-/* hide this :3 ~ rant 
+/* hide this :3 ~ rant
     this is a cool idea, but it would add a lot of complexity to the codebase.
     not that it’s super hard to do, just not worth the effort right now.
     it would need a Context Provider to manage sidebar state and a bunch of other stuff,
     so i’m not going to implement it for now. maybe later i’ll find a better solution (that *is* probably the only solution.)
     definitely something to consider down the line, but for now it just makes things infinitely more complicated.
  */
-const Navbar = () => {
+const Navbar = ({ sidebarItems = [] }: NavbarProps) => {
     const router = useRouter()
     const pathname = usePathname()
 
+    const defaultItems: SidebarItem[] = [
+        {
+            id: "home",
+            icon: <Home />,
+            label: "Home",
+            href: "/",
+            section: "upper",
+            priority: 0,
+        },
+        {
+            id: "settings",
+            icon: <Settings />,
+            label: "Settings",
+            href: "/settings",
+            section: "lower",
+            priority: 0,
+        },
+    ]
+
+    const allItems = [...defaultItems, ...sidebarItems].sort(
+        (a, b) => (a.priority || 0) - (b.priority || 0)
+    )
+
     const navbarButtons = {
-        upper: [{ icon: <Home />, label: "Home", href: "/" }],
-        lower: [{ icon: <Settings />, label: "Settings", href: "/settings" }],
+        upper: allItems.filter(item => item.section !== "lower"),
+        lower: allItems.filter(item => item.section === "lower"),
     }
 
     // preload all navbar pages for instant navigation
     // i feel like explaining this is a good idea, basically we are flattening the object via reduce ( i love reduce )
     // and then filtering out the ones that don't have a href
-    const allNavbarUrls = Object.values(navbarButtons).reduce<string[]>(
-        (acc, buttons) => {
-            buttons.forEach(btn => {
-                if (btn.href) acc.push(btn.href)
-            })
-            return acc
-        },
-        []
-    )
+    const allNavbarUrls = allItems.reduce<string[]>((acc, item) => {
+        if (item.href) acc.push(item.href)
+        return acc
+    }, [])
 
     usePreloadPages({ urls: allNavbarUrls })
 
     const renderButtons = (
-        buttons: NavbarButtonProps[],
+        buttons: SidebarItem[],
         compact: boolean | undefined = false
     ) =>
         buttons.map(btn => {
@@ -96,15 +128,18 @@ const Navbar = () => {
                 (pathname === btn.href || pathname.startsWith(btn.href + "/"))
             return (
                 <NavbarButton
-                    key={btn.label}
+                    key={btn.id}
+                    icon={btn.icon}
+                    label={btn.label}
                     clicked={isActive}
                     compact={compact}
-                    onClick={() =>
-                        btn.href &&
-                        pathname !== btn.href &&
-                        router.push(btn.href)
-                    }
-                    {...btn}
+                    onClick={() => {
+                        if (btn.onClick) {
+                            btn.onClick()
+                        } else if (btn.href && pathname !== btn.href) {
+                            router.push(btn.href)
+                        }
+                    }}
                 />
             )
         })

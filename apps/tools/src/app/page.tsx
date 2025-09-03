@@ -2,6 +2,7 @@ import ToolCard, { ToolCardProps } from "@morsz/ui/special/tool-card"
 import Logo from "@morsz/ui/special/tools-logo"
 import { obviously } from "@morsz/ui/styles/fonts"
 import {
+    Clock,
     CodeXml,
     Cpu,
     Diff,
@@ -18,6 +19,7 @@ import {
     Star,
     Terminal,
     Type,
+    Zap,
 } from "lucide-react"
 
 const tools: ToolCardProps[] = [
@@ -72,6 +74,14 @@ const tools: ToolCardProps[] = [
         icon: <CodeXml className="h-6 w-6" />,
         href: "https://github.com/morsznetik/morsz.monorepo",
         color: "bg-indigo-500/10 text-indigo-700 dark:text-indigo-300",
+    },
+    {
+        title: "Countdown Timer",
+        description:
+            "create shareable countdown timers with encoded URLs for any date and time",
+        icon: <Clock className="h-6 w-6" />,
+        href: "/countdown-timer",
+        color: "bg-orange-500/10 text-orange-700 dark:text-orange-300",
     },
     {
         title: "Component Gallery",
@@ -219,7 +229,8 @@ const featuredTools: ToolCardProps[] = [
     },
     {
         title: "RealFaviconGenerator",
-        description: "generate favicons for all platforms, also supports a bunch of frameworks",
+        description:
+            "generate favicons for all platforms, also supports a bunch of frameworks",
         credits: {
             name: "Philippe Bernard",
             link: "https://philippebernard.dev/",

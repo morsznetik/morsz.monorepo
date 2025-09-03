@@ -9,7 +9,7 @@ import {
 } from "../tooltip"
 import { AlertCircle, CheckCircle, RefreshCw } from "lucide-react"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface CommitInfo {
     current: string
@@ -46,7 +46,7 @@ const VersionIndicator = ({
 }: VersionIndicatorProps) => {
     const isDevelopment = process.env.NODE_ENV === "development"
 
-    const getCachedData = (): CachedCommitData | null => {
+    const getCachedData = useCallback((): CachedCommitData | null => {
         if (typeof window === "undefined") return null
         try {
             const cached = localStorage.getItem(CACHE_KEY)
@@ -60,24 +60,27 @@ const VersionIndicator = ({
         } catch {
             return null
         }
-    }
+    }, [app])
 
-    const setCachedData = (commitHash: string) => {
-        if (typeof window === "undefined") return
-        try {
-            const data: CachedCommitData = {
-                commitHash,
-                timestamp: Date.now(),
-                app,
+    const setCachedData = useCallback(
+        (commitHash: string) => {
+            if (typeof window === "undefined") return
+            try {
+                const data: CachedCommitData = {
+                    commitHash,
+                    timestamp: Date.now(),
+                    app,
+                }
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data))
+            } catch {
+                // silently
             }
-            localStorage.setItem(CACHE_KEY, JSON.stringify(data))
-        } catch {
-            // silently
-        }
-    }
+        },
+        [app]
+    )
 
     // compute the paths that should trigger updates for this app
-    const getWatchedPaths = (): string[] => {
+    const getWatchedPaths = useCallback((): string[] => {
         const paths = [`apps/${app}`]
 
         const sharedPackages = ["ui", "tailwind-config"]
@@ -95,7 +98,7 @@ const VersionIndicator = ({
         }
 
         return paths
-    }
+    }, [app, dependencies])
 
     const [commitInfo, setCommitInfo] = useState<CommitInfo>(() => {
         return {
@@ -112,7 +115,7 @@ const VersionIndicator = ({
             const cached = getCachedData()
 
             // if we have recent cached data (less than 5 minutes old), don't fetch
-            if (cached && (Date.now() - cached.timestamp) < 5 * 60 * 1000) {
+            if (cached && Date.now() - cached.timestamp < 5 * 60 * 1000) {
                 setCommitInfo(prev => ({
                     ...prev,
                     latest: cached.commitHash,
@@ -190,7 +193,15 @@ const VersionIndicator = ({
         }
 
         fetchLatestCommit()
-    }, [repo, app, currentCommitHash, dependencies])
+    }, [
+        repo,
+        app,
+        currentCommitHash,
+        dependencies,
+        getCachedData,
+        getWatchedPaths,
+        setCachedData,
+    ])
 
     const getStatusIcon = () => {
         if (commitInfo.isLoading) {
@@ -267,7 +278,7 @@ const VersionIndicator = ({
                             Commit message:
                         </div>
                         <div className="text-xs italic">
-                            "{currentCommitMessage}"
+                            &ldquo;{currentCommitMessage}&rdquo;
                         </div>
                     </div>
                 )}
