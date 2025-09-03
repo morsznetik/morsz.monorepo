@@ -19,7 +19,6 @@ import {
     Star,
     Terminal,
     Type,
-    Zap,
 } from "lucide-react"
 
 const tools: ToolCardProps[] = [

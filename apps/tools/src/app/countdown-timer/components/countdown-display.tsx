@@ -20,7 +20,7 @@ import { cn } from "@morsz/ui/utils"
 import { Clock } from "lucide-react"
 import { DateTime } from "luxon"
 
-import { memo, useEffect, useMemo, useRef, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 
 // Utility function to format numbers in shortened format (e.g., 27393 -> 27.3K)
 const formatShortenedNumber = (num: number): string => {
@@ -401,5 +401,9 @@ const CountdownDisplay = memo(
         )
     }
 )
+
+
+// its memoized so it loses the display name we have to set it manually
+CountdownDisplay.displayName = "CountdownDisplay"
 
 export default CountdownDisplay

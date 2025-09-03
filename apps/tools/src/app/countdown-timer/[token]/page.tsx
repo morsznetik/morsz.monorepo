@@ -7,8 +7,6 @@ import {
 } from "@/app/countdown-timer/utils/datetime"
 import { CountdownData } from "@/app/countdown-timer/utils/datetime"
 import { Card, CardContent, CardHeader, CardTitle } from "@morsz/ui/card"
-import { useSidebarItems } from "@morsz/ui/special/navbar"
-import { Zap } from "lucide-react"
 
 import { memo } from "react"
 
@@ -78,5 +76,9 @@ const CountdownDisplayPage = memo(
         )
     }
 )
+
+
+// its memoized so it loses the display name we have to set it manually
+CountdownDisplayPage.displayName = "CountdownDisplayPage"
 
 export default CountdownDisplayPage

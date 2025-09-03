@@ -141,8 +141,7 @@ function Calendar({
                 }: {
                     className?: string
                     rootRef?: React.Ref<HTMLDivElement>
-                    [key: string]: any
-                }) => {
+                } & React.HTMLAttributes<HTMLDivElement>) => {
                     return (
                         <div
                             data-slot="calendar"
@@ -156,11 +155,7 @@ function Calendar({
                     className,
                     orientation,
                     ...props
-                }: {
-                    className?: string
-                    orientation?: string
-                    [key: string]: any
-                }) => {
+                }: { className?: string; orientation?: string } & React.SVGProps<SVGSVGElement>) => {
                     if (orientation === "left") {
                         return (
                             <ChevronLeftIcon
