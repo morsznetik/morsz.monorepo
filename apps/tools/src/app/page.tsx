@@ -1,6 +1,7 @@
 import ToolCard, { ToolCardProps } from "@morsz/ui/special/tool-card"
 import Logo from "@morsz/ui/special/tools-logo"
 import { obviously } from "@morsz/ui/styles/fonts"
+import { SITE_CONFIG } from "@/app/config/urls"
 import {
     Clock,
     CodeXml,
@@ -26,7 +27,7 @@ const tools: ToolCardProps[] = [
         title: "Unicode Inspector",
         description: "inspect unicode characters and their properties",
         icon: <Search className="h-6 w-6" />,
-        href: "/unicode",
+        href: SITE_CONFIG.TOOLS.UNICODE,
         color: "bg-green-500/10 text-green-700 dark:text-green-300",
     },
     {
@@ -48,14 +49,14 @@ const tools: ToolCardProps[] = [
         description:
             "convert polish latin to cyrillic, made for, and with the help of, a friend",
         icon: <Languages className="h-6 w-6" />,
-        href: "/polish-latin-to-cyrillic",
+        href: SITE_CONFIG.TOOLS.POLISH_LATIN_TO_CYRILLIC,
         color: "bg-pink-500/10 text-pink-700 dark:text-pink-300",
     },
     {
         title: "Password Strength",
         description: "check a password's strength, data via HiveSystems",
         icon: <KeyRound className="h-6 w-6" />,
-        href: "/password-checker",
+        href: SITE_CONFIG.TOOLS.PASSWORD_CHECKER,
         color: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-300",
     },
     {
@@ -79,7 +80,7 @@ const tools: ToolCardProps[] = [
         description:
             "create shareable countdown timers with encoded URLs for any date and time",
         icon: <Clock className="h-6 w-6" />,
-        href: "/countdown-timer",
+        href: SITE_CONFIG.TOOLS.COUNTDOWN,
         color: "bg-orange-500/10 text-orange-700 dark:text-orange-300",
     },
     {
