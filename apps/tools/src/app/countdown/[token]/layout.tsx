@@ -1,6 +1,6 @@
-import PageHeader from "@/app/countdown-timer/components/page-header"
+import PageHeader from "@/app/countdown/components/page-header"
 
-const CountdownTimerTokenLayout = ({
+const CountdownTokenLayout = ({
     children,
 }: {
     children: React.ReactNode
@@ -13,4 +13,4 @@ const CountdownTimerTokenLayout = ({
     )
 }
 
-export default CountdownTimerTokenLayout
+export default CountdownTokenLayout

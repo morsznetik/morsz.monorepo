@@ -16,7 +16,7 @@ export const SITE_CONFIG = {
         PASSWORD_CHECKER: "/password-checker",
         UNICODE: "/unicode",
         POLISH_LATIN_TO_CYRILLIC: "/polish-latin-to-cyrillic",
-        COUNTDOWN_TIMER: "/countdown-timer",
+        COUNTDOWN: "/countdown",
     },
 } as const
 

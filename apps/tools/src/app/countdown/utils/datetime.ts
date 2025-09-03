@@ -1,7 +1,7 @@
 import {
     POPULAR_TIMEZONES,
     normalizeTimezoneForLuxon,
-} from "@/app/countdown-timer/utils/timezone"
+} from "@/app/countdown/utils/timezone"
 import { DateTime } from "luxon"
 
 export interface TimeData {

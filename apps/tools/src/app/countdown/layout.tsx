@@ -10,7 +10,7 @@ export const metadata: Metadata = {
         description:
             "Create shareable countdown timers with encoded URLs. Set a date and time to generate a unique link that anyone can use to see the countdown.",
         type: "website",
-        url: getToolUrl(SITE_CONFIG.TOOLS.COUNTDOWN_TIMER),
+        url: getToolUrl(SITE_CONFIG.TOOLS.COUNTDOWN),
         images: [
             {
                 url: SITE_CONFIG.LOGO.src,
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     },
 }
 
-const CountdownTimerLayout = ({ children }: { children: React.ReactNode }) => {
+const CountdownLayout = ({ children }: { children: React.ReactNode }) => {
     return <>{children}</>
 }
 
-export default CountdownTimerLayout
+export default CountdownLayout

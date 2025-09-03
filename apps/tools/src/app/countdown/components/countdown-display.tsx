@@ -4,11 +4,11 @@ import {
     TimeData,
     calculateCountdownUpdate,
     parseDateTime,
-} from "@/app/countdown-timer/utils/datetime"
+} from "@/app/countdown/utils/datetime"
 import {
     getTimezoneAbbreviation,
     normalizeTimezoneForLuxon,
-} from "@/app/countdown-timer/utils/timezone"
+} from "@/app/countdown/utils/timezone"
 import {
     Card,
     CardContent,
@@ -22,7 +22,6 @@ import { DateTime } from "luxon"
 
 import { memo, useEffect, useMemo, useState } from "react"
 
-// Utility function to format numbers in shortened format (e.g., 27393 -> 27.3K)
 const formatShortenedNumber = (num: number): string => {
     if (num < 1000) {
         return num.toString()
@@ -37,7 +36,6 @@ const formatShortenedNumber = (num: number): string => {
     for (const unit of units) {
         if (num >= unit.value) {
             const formatted = (num / unit.value).toFixed(1)
-            // Remove .0 if it's a whole number
             return formatted.endsWith(".0")
                 ? formatted.slice(0, -2) + unit.symbol
                 : formatted + unit.symbol

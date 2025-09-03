@@ -1,11 +1,11 @@
-import CountdownDisplay from "@/app/countdown-timer/components/countdown-display"
-import { decodeToken } from "@/app/countdown-timer/utils/base62"
+import CountdownDisplay from "@/app/countdown/components/countdown-display"
+import { decodeToken } from "@/app/countdown/utils/base62"
 import {
     calculateInitialTimeStates,
     fromUTCTimestampAndOffset,
     getTimezonesFromOffset,
-} from "@/app/countdown-timer/utils/datetime"
-import { CountdownData } from "@/app/countdown-timer/utils/datetime"
+} from "@/app/countdown/utils/datetime"
+import { CountdownData } from "@/app/countdown/utils/datetime"
 import { Card, CardContent, CardHeader, CardTitle } from "@morsz/ui/card"
 
 import { memo } from "react"

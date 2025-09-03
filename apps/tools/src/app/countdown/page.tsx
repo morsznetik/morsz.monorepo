@@ -1,16 +1,16 @@
 "use client"
 
 import { SITE_CONFIG, getToolUrl } from "@/app/config/urls"
-import CountdownDisplay from "@/app/countdown-timer/components/countdown-display"
-import { encodeToken } from "@/app/countdown-timer/utils/base62"
+import CountdownDisplay from "@/app/countdown/components/countdown-display"
+import { encodeToken } from "@/app/countdown/utils/base62"
 import {
     parseDateTime,
     toUTCTimestamp,
-} from "@/app/countdown-timer/utils/datetime"
+} from "@/app/countdown/utils/datetime"
 import {
     getUTCTimezones,
     getUniqueTimezones,
-} from "@/app/countdown-timer/utils/timezone"
+} from "@/app/countdown/utils/timezone"
 import { Button } from "@morsz/ui/button"
 import { Calendar as CalendarComponent } from "@morsz/ui/calendar"
 import { Card, CardContent, CardHeader, CardTitle } from "@morsz/ui/card"
@@ -29,7 +29,7 @@ import { DateTime } from "luxon"
 
 import { useEffect, useState } from "react"
 
-export const CountdownTimer = () => {
+const Countdown = () => {
     const [timezone, setTimezone] = useState("")
     const [timezoneOptions, setTimezoneOptions] = useState<
         { name: string; label: string; offset: number }[]
@@ -134,7 +134,7 @@ export const CountdownTimer = () => {
 
     const getShareUrl = () => {
         if (!generatedToken) return ""
-        return `${getToolUrl(SITE_CONFIG.TOOLS.COUNTDOWN_TIMER)}/${generatedToken}`
+        return `${getToolUrl(SITE_CONFIG.TOOLS.COUNTDOWN)}/${generatedToken}`
     }
 
     return (
@@ -304,4 +304,4 @@ export const CountdownTimer = () => {
     )
 }
 
-export default CountdownTimer
+export default Countdown
