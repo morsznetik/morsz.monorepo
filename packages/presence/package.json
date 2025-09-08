@@ -1,0 +1,29 @@
+{
+    "name": "@morsz/presence",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        "./client": "./src/client.ts",
+        "./types": "./src/types/presence.ts",
+        "./utils/*": "./src/utils/*.ts"
+    },
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch",
+        "lint": "eslint src --max-warnings 0",
+        "format": "prettier --cache --write ."
+    },
+    "devDependencies": {
+        "@types/node": "^24.3.0",
+        "typescript": "^5.9.2",
+        "eslint": "^9.33.0",
+        "prettier": "^3.6.2",
+        "@morsz/eslint-config": "*",
+        "@morsz/typescript-config": "*",
+        "@morsz/tailwind-config": "*"
+    },
+    "dependencies": {
+        "ws": "^8.18.0"
+    }
+}

@@ -5,20 +5,12 @@ import { Trash2 } from "lucide-react"
 
 import React, { useCallback, useState } from "react"
 
-const APP_KEYS = [
-    // Consent storage keys (v2 and legacy)
-    "cookie_consent_v2",
-    "cookie_consent",
-    // next-themes key
-    "theme",
-]
-
 const ResetLocalStorageButton = () => {
     const [cleared, setCleared] = useState(false)
 
     const handleReset = useCallback(() => {
         try {
-            APP_KEYS.forEach(key => localStorage.removeItem(key))
+            localStorage.clear()
             setCleared(true)
             // Feedback timeout
             setTimeout(() => setCleared(false), 1200)
@@ -33,10 +25,10 @@ const ResetLocalStorageButton = () => {
             size="sm"
             onClick={handleReset}
             className="rounded-md"
-            title="Reset app localStorage keys"
+            title="Clear all localStorage data"
         >
             <Trash2 className="mr-2 h-4 w-4" />
-            {cleared ? "Cleared" : "Reset localStorage"}
+            {cleared ? "Cleared" : "Clear All Data"}
         </Button>
     )
 }

@@ -46,7 +46,7 @@ export function encodeTitle(title: string): string {
     // turn the string into utf-8 bytes, then add them all into a bigint
     // for each byte, shift what we got left by 8 bits and add the byte
     // basically packs the whole string into a single number
-    let combined = [...new TextEncoder().encode(title)].reduce(
+    const combined = [...new TextEncoder().encode(title)].reduce(
         (acc, b) => (acc << 8n) + BigInt(b),
         0n
     )
